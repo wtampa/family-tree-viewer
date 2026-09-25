@@ -9,5 +9,5 @@
     "royal92": true,
     "personal": false
   },
-  "note": "Copy to settings.json (gitignored). Set personalRoot to the folder that contains data/data.gramps (imported once into data/tree.db). Never point this at the app folder."
+  "note": "Copy to settings.json (gitignored). Set personalRoot to the folder that contains data/data.gramps or data/data.ged (imported once into data/tree.db). Optional personalFile overrides that path. Never point this at the app folder."
 }

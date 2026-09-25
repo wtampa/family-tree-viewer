@@ -14,6 +14,7 @@ const PARENT = path.resolve(APP_ROOT, "..");
 const CATALOG_FILE = path.join(APP_ROOT, "sample", "catalog.json");
 const SETTINGS_FILE = path.join(APP_ROOT, "settings.json");
 const PERSONAL_REL = "data/data.gramps";
+const PERSONAL_GED_REL = "data/data.ged";
 
 export { APP_ROOT, PARENT };
 
@@ -25,16 +26,23 @@ function readAppSettings() {
 export function personalRoot() {
   const s = readAppSettings();
   if (s.personalRoot && fs.existsSync(s.personalRoot)) return path.resolve(s.personalRoot);
-  const nextDoor = path.join(PARENT, PERSONAL_REL);
-  if (fs.existsSync(nextDoor)) return PARENT;
+  const nextGramps = path.join(PARENT, PERSONAL_REL);
+  if (fs.existsSync(nextGramps)) return PARENT;
+  const nextGed = path.join(PARENT, PERSONAL_GED_REL);
+  if (fs.existsSync(nextGed)) return PARENT;
   return APP_ROOT;
 }
 
 export function personalFile() {
   const s = readAppSettings();
-  const rel = s.personalFile || PERSONAL_REL;
-  if (path.isAbsolute(rel)) return rel;
-  return path.join(personalRoot(), rel);
+  if (s.personalFile) {
+    return path.isAbsolute(s.personalFile) ? s.personalFile : path.join(personalRoot(), s.personalFile);
+  }
+  const gramps = path.join(personalRoot(), PERSONAL_REL);
+  if (fs.existsSync(gramps)) return gramps;
+  const ged = path.join(personalRoot(), PERSONAL_GED_REL);
+  if (fs.existsSync(ged)) return ged;
+  return gramps;
 }
 
 export function personalDbFile() {

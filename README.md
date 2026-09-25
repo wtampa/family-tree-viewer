@@ -4,55 +4,37 @@
 [![Node](https://img.shields.io/badge/node-22%2B-green.svg)](https://nodejs.org/)
 [![CI](https://github.com/wtampa/family-tree-viewer/actions/workflows/check.yml/badge.svg)](https://github.com/wtampa/family-tree-viewer/actions/workflows/check.yml)
 
-Localhost genealogy app. Imports [Gramps](https://gramps-project.org/) XML and GEDCOM. **My tree** lives in a SQLite database on your machine. Sample trees stay read-only.
+A local research desk for one genealogist. Import a [Gramps](https://gramps-project.org/) or GEDCOM file, see the whole tree, and work the gaps — without uploading anyone.
 
-The server binds **`127.0.0.1` only**. Do not expose it to the internet, and do not put a real family file on GitHub.
+Hints flag brick walls, missing vitals, uncited events, and possible duplicates. They do not invent a given name or a parent. Edits live in a SQLite copy on your machine. The original Gramps or GEDCOM file is never overwritten.
+
+Free (MIT). No account. No cloud copy of your tree. The server binds **`127.0.0.1` only**. Do not expose it to the internet, and do not put a real family file on GitHub.
+
+[New to GEDCOM?](docs/START.md) · [User guide](docs/USERGUIDE.md) · [15-minute tutorial](docs/TUTORIAL.md) · [Share a redacted pack](docs/FAMILY.md)
 
 <p align="center">
-  <img src="docs/assets/hero.png" alt="Hive 3D view of the British royal sample, living people hidden" width="100%" />
+  <img src="docs/assets/hero.png" alt="British royal sample, living people hidden. Hive 3D stacks the tree by generation so brick walls and pedigree collapse are visible at once." width="100%" />
 </p>
 
-## Introduction
+<p align="center"><em>British royal sample, living people hidden. Hive 3D stacks the tree by generation so brick walls and pedigree collapse are visible at once.</em></p>
 
-Family Tree is a desktop viewer and editor for one genealogist at a time. It draws a tree by generation, flags research gaps without inventing people, and keeps the writable copy in SQLite so the original Gramps file is never overwritten.
+## Who it is for
 
-It is free (MIT). There is no account, no upload, and no hosted copy of your tree. Relatives who want the same app clone it and run it themselves. A read-only pack for a private link is described in [docs/FAMILY.md](docs/FAMILY.md); that pack is still produced on localhost.
+- Gramps users who want a faster view of the same file, without giving up the `.gramps` archive
+- Researchers who want a hint list that only reports missing evidence
+- Anyone who will not put a living family on a public website
 
-How to click through it: [docs/USERGUIDE.md](docs/USERGUIDE.md). A short path on the royal sample: [docs/TUTORIAL.md](docs/TUTORIAL.md).
+It is not Ancestry, FamilySearch, or a hosted Gramps Web. It does not match records or sync an online tree. Export GEDCOM when you want those sites; keep this app as the local desk.
 
-## Why this exists
+## What you can do
 
-GEDCOM and Gramps already store the genealogy. What is awkward is looking at a whole tree, seeing where the evidence stops, and editing without a hosted service in the middle.
+**See every generation at once.** Portraits sit on the nodes. Brick walls pulse so the next research target is visible. The hive is stacked by generation (ancestors up), not by birth year.
 
-| | Family Tree | [Family Plot](https://github.com/oh-kay-blanket/family-plot) | [Topola](https://github.com/PeWu/topola-viewer) | [Gramps Web](https://github.com/gramps-project/gramps-web) |
-| --- | --- | --- | --- | --- |
-| 3D layout | generations (ancestors up) | birth year | — | — |
-| Edit | local SQLite, undo | GEDCOM edits | view | hosted Gramps |
-| Hints | never invents a name | — | — | — |
-| Bind | `127.0.0.1` only | local | local / static | server you host |
+**Fan chart of ancestors.** Dashed wedges are unknown parents. A gold diamond is pedigree collapse — the same person in two ahnentafel slots. The app does not merge two records.
 
-This app is not Family Plot (that project’s 3D axis is birth year) and it is not a multi-user host.
+**Evidence score, 0–100**, from the citations already on the person. Weak scores are a research list, not a match to a stranger’s tree. Hints never invent a given name or a parent.
 
-## Key features
-
-### Views
-
-- Pedigree, descendants, and hourglass
-- Fan chart. Dashed wedges are unknown parents. A gold diamond means the same person id occupies two ahnentafel slots
-- Timeline of lifespans, plus a places map when the file already has coordinates
-- Hive 3D: the whole tree in generation layers, with portraits
-- Sources table and a hints dashboard
-- History of saved edits on My tree
-
-### Research hints
-
-Person score 0–100 from weighted citations. Hint types include brick wall, missing vitals, uncited events, and possible duplicates. The engine does not invent a given name or a parent. Kinship paths are blood plus one marriage hop.
-
-### Editing and export
-
-On My tree: names, gender, events, notes, parents, spouses, children, sources, and portraits, with undo. Choosing a photo copies it into your research folder (`sources/portraits` or `sources/people`) and does not upload it. Export writes a new timestamped Gramps XML or GEDCOM file. The original `data.gramps` is not modified.
-
-### Privacy
+**Your Gramps or GEDCOM file stays an archive.** First open imports it into a local database. Export writes a new timestamped `.gramps` or `.ged`. Pedigree, descendants, hourglass, timeline, sources, and edit history are also here.
 
 Sample trees hide living names, dates, notes, and portraits until you unlock them. A share pack redacts living people even if the desktop toggle is unlocked.
 
@@ -60,15 +42,15 @@ Sample trees hide living names, dates, notes, and portraits until you unlock the
 
 British royal sample, **Living hidden** on.
 
-<img src="docs/screenshots/hive.png" alt="Hive 3D" width="100%" />
+<img src="docs/screenshots/hive.png" alt="One view of the royal sample — generations up, living names hidden." width="100%" />
 
-<img src="docs/screenshots/fan.png" alt="Fan chart with gold pedigree-collapse diamonds" width="100%" />
+<img src="docs/screenshots/fan.png" alt="Unknown parents are dashed; gold diamonds mark pedigree collapse." width="100%" />
 
-<img src="docs/screenshots/timeline.png" alt="Timeline" width="100%" />
+<img src="docs/screenshots/timeline.png" alt="Lifespans by generation, plus a places path when the file already has coordinates." width="100%" />
 
-<img src="docs/screenshots/hints.png" alt="Research hints" width="100%" />
+<img src="docs/screenshots/hints.png" alt="Brick walls and uncited events. No invented cousins." width="100%" />
 
-<img src="docs/screenshots/drawer.png" alt="Person drawer" width="100%" />
+<img src="docs/screenshots/drawer.png" alt="Parents, spouses, children, kinship, census years, and the citation score." width="100%" />
 
 ## Installation
 
@@ -96,9 +78,11 @@ npm run fetch-portraits
 
 Open a view with a query string: `http://127.0.0.1:5180/?tree=queen&view=hive`. `person=home` opens the home person’s drawer.
 
+Coming from Ancestry with a `.ged` file: [docs/START.md](docs/START.md).
+
 ### Your own tree
 
-Copy `settings.example.json` to `settings.json` (gitignored). Set `personalRoot` to the folder that contains `data/data.gramps`. The first load imports that file into `data/tree.db` and never writes the Gramps file again.
+Copy `settings.example.json` to `settings.json` (gitignored). Set `personalRoot` to the folder that contains `data/data.gramps` or `data/data.ged`. The first load imports that file into `data/tree.db` and never writes the source file again.
 
 ## Sample trees
 
@@ -106,12 +90,31 @@ Copy `settings.example.json` to `settings.json` (gitignored). Set `personalRoot`
 | --- | --- | --- |
 | British royal family | Portraits, pedigree collapse, Hive | `fetch-samples` from [Gramps Web queen demo](https://github.com/DavidMStraub/gramps-web-example-tree-queen) (CC BY-SA 4.0) |
 | US Presidents | Compact native `.gramps` | [example-Gramps-Trees](https://github.com/emyoulation/example-gramps-trees) |
-| Ingalls (1880) | Tiny census file | example-Gramps-Trees |
+| Ingalls (1880) | Tiny census teaching file | example-Gramps-Trees |
 | royal92 | Public-domain European royalty | example-Gramps-Trees (Denis R. Reid) |
-| The Simpsons, Duck family, Harry Potter | Small fan demos | GEDCOM files in this repository |
+| The Simpsons, Duck family, Harry Potter | Small public GEDCOMs so you can try the views before pointing the app at your own file | GEDCOM files in this repository |
 | Westeros kings | GenoPro public tree | fetched from its [origin URL](https://familytrees.genopro.com/AngelEyes/KINGS/FamilyTree.ged) |
 
 Character faces for the fan trees and Westeros are not in the repository. `npm run fetch-portraits` downloads them from the wiki URLs in each `portraits.json`. See [sample/README.md](sample/README.md).
+
+## Why this exists
+
+GEDCOM and Gramps already store the genealogy. What is still hard is seeing the whole tree, seeing where the citations stop, and editing without a company in the middle.
+
+This app is the overlay: generation views, an evidence score, and a hint dashboard. [Family Plot](https://github.com/oh-kay-blanket/family-plot)’s 3D axis is birth year; this hive is generations (ancestors up). [Gramps Web](https://github.com/gramps-project/gramps-web) is a server you host. This process binds `127.0.0.1` only.
+
+| | Family Tree | [Family Plot](https://github.com/oh-kay-blanket/family-plot) | [Topola](https://github.com/PeWu/topola-viewer) | [Gramps Web](https://github.com/gramps-project/gramps-web) |
+| --- | --- | --- | --- | --- |
+| 3D layout | generations (ancestors up) | birth year | — | — |
+| Edit | local SQLite, undo | GEDCOM edits | view | hosted Gramps |
+| Hints | never invents a name | — | — | — |
+| Bind | `127.0.0.1` only | local | local / static | server you host |
+
+## Share a read-only tree
+
+**Share view** on the desktop writes a frozen pack. Living people are already labeled **Living**. Relatives do not install Node.
+
+Hosting is optional. A common path is Cloudflare Pages plus Access (an email allowlist): lock the door before you upload, and never put `tree.db` on GitHub. The click-by-click lock-then-upload steps are in [docs/FAMILY.md](docs/FAMILY.md).
 
 ## Data model
 
@@ -119,7 +122,7 @@ Gramps XML and GEDCOM import into one JSON model. My tree is stored in SQLite (`
 
 ## Tutorial
 
-[docs/TUTORIAL.md](docs/TUTORIAL.md) — royal sample, fan diamonds, hive, drawer, hints, then your own file.
+New to genealogy files: [docs/START.md](docs/START.md). Fifteen minutes on the royal sample: [docs/TUTORIAL.md](docs/TUTORIAL.md).
 
 ## Citation
 

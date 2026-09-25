@@ -16,7 +16,6 @@ import {
   treeFileExists, loadTreeFile, pickHomeId, publicTreeList, personalEntry,
   personalRoot, personalFile, personalDbFile, hasPersonalDb,
 } from "./server/trees.mjs";
-import { loadGramps } from "./server/gramps-parse.mjs";
 import {
   applyEdit, changeCount, importModel, listHistory, loadModelFromDb, openDb, personalBackupDir,
   personalExportDir, rotateBackups, undoLast,
@@ -135,13 +134,13 @@ function ensurePersonalStore() {
   if (root === APP_ROOT) throw new Error("Set personalRoot in settings.json to your research folder");
   const dbPath = personalDbFile();
   if (!fs.existsSync(dbPath)) {
-    const gramps = personalFile();
-    if (!fs.existsSync(gramps)) throw new Error("No tree.db and no data.gramps to import");
-    const model = loadGramps(gramps);
+    const source = personalFile();
+    if (!fs.existsSync(source)) throw new Error("No tree.db and no data.gramps or data.ged to import");
+    const model = loadTreeFile(source);
     const db = openDb(dbPath);
-    try { importModel(db, model, { source: gramps }); }
+    try { importModel(db, model, { source }); }
     finally { db.close(); }
-    console.log(`[tree] imported Gramps → ${dbPath} (data.gramps left untouched)`);
+    console.log(`[tree] imported ${path.basename(source)} → ${dbPath} (source file left untouched)`);
   }
   return dbPath;
 }

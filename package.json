@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Localhost family tree app with a generation hive, research hints, and SQLite editing (Gramps/GEDCOM import; Gramps XML and GEDCOM export)",
+  "description": "A local research desk for Gramps and GEDCOM. See the whole tree, score the evidence, and get hints that never invent a person. Your file stays on this computer.",
   "scripts": {
     "dev": "vite",
     "build": "vite build && vite build --config vite.share.config.mjs",

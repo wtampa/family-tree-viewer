@@ -397,6 +397,21 @@ table.table td { padding: 6px 8px; border-bottom: 1px solid rgba(255, 255, 255, 
 .boot .err { color: #ffb3ba; max-width: 520px; text-align: center; }
 .boot .err-stack { max-width: 640px; font-size: 11px; color: #ffc9ce; opacity: 0.8; text-align: left; white-space: pre-wrap; background: rgba(0,0,0,.35); padding: 10px 12px; border-radius: 8px; overflow: auto; }
 
+/* ---------- README / capture shots (?shot=1) ---------- */
+html.shot-mode .topbar,
+html.shot-mode .chart-toolbar,
+html.shot-mode .toast,
+html.shot-mode .palette-backdrop,
+html.shot-mode .peek,
+html.shot-mode .legend,
+html.shot-mode .crumbs {
+  display: none !important;
+}
+html.shot-mode .app { height: 100%; }
+html.shot-mode .stage,
+html.shot-mode .stage-inner { inset: 0; }
+html.shot-mode .page { height: 100%; }
+
 /* ---------- print ---------- */
 @media print {
   body { background: #fff; color: #000; overflow: visible; }

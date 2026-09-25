@@ -1,6 +1,6 @@
 # Tutorial
 
-About fifteen minutes on the British royal sample. You need [Node.js](https://nodejs.org/) 22+.
+About fifteen minutes on the British royal sample. You need [Node.js](https://nodejs.org/) 22+. New to GEDCOM or Ancestry: start with [START.md](START.md).
 
 ## 1. Install and open a sample
 
@@ -38,11 +38,11 @@ Click a card. Overview lists parents, spouses, children, and a kinship path (blo
 
 Key `8`. Hints are missing vitals, uncited events, brick walls, and possible duplicates. They never invent a given name or a parent. Pin, done, and dismiss are stored in gitignored `hints-state.json` on your machine.
 
-## 7. Your own Gramps file
+## 7. Your own file
 
 1. Copy `settings.example.json` to `settings.json`.
-2. Set `personalRoot` to the folder that contains `data/data.gramps`.
-3. Restart. The first load imports that file into `data/tree.db` and does not write the Gramps file again.
+2. Set `personalRoot` to the folder that contains `data/data.gramps` or `data/data.ged`.
+3. Restart. The first load imports that file into `data/tree.db` and does not write the source file again.
 4. Turn on **Edit** in the top bar. Changes have undo. **Export** writes a new timestamped `.gramps` or `.ged` under `data/exports/`.
 
 Do not commit `settings.json` or the database.

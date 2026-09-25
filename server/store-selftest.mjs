@@ -12,7 +12,7 @@ import { dispatchEdit } from "./edit.mjs";
 import { assertSafeExportPath, modelToGrampsXml, writeGrampsExport } from "./gramps-export.mjs";
 import { writeGedcomExport } from "./gedcom-export.mjs";
 import { parseGedcom } from "./gedcom-parse.mjs";
-import { hasPersonalTree, personalFile } from "./trees.mjs";
+import { hasPersonalTree, loadTreeFile, personalFile } from "./trees.mjs";
 import { assertInside, destRelative, ingestFile, parseIngestBody, personFileSlug } from "./media-ingest.mjs";
 
 const APP = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -334,6 +334,39 @@ function testEdits() {
   db.close();
 }
 
+function testGedFirstImport() {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "ftv-ged-import-"));
+  const dataDir = path.join(dir, "data");
+  fs.mkdirSync(dataDir, { recursive: true });
+  const gedPath = path.join(dataDir, "data.ged");
+  fs.writeFileSync(gedPath, [
+    "0 HEAD",
+    "1 SOUR Family Tree selftest",
+    "1 GEDC",
+    "2 VERS 5.5.1",
+    "0 @I1@ INDI",
+    "1 NAME Ada /Cruz/",
+    "1 SEX F",
+    "0 TRLR",
+    "",
+  ].join("\n"));
+  const before = fs.readFileSync(gedPath);
+  const model = loadTreeFile(gedPath);
+  assert(Object.keys(model.people).length === 1, "ged loadTreeFile people");
+  const dbPath = path.join(dataDir, "tree.db");
+  const db = openDb(dbPath);
+  try {
+    importModel(db, model, { source: gedPath });
+    const loaded = loadModelFromDb(db);
+    assert(Object.keys(loaded.people).length === 1, "ged imported to sqlite");
+    const person = Object.values(loaded.people)[0];
+    assert(person.first === "Ada", "ged given name");
+    assert(Buffer.compare(before, fs.readFileSync(gedPath)) === 0, "source ged untouched");
+  } finally {
+    db.close();
+  }
+}
+
 function maybeFileRoundTrip() {
   const extra = [];
   const queen = path.join(APP, "sample", "queen", "queen.gramps");
@@ -353,6 +386,8 @@ export function selftestStore() {
   roundTrip("fixture", FIXTURE_XML, { values: true });
   tests += 1;
   testEdits();
+  tests += 1;
+  testGedFirstImport();
   tests += 1;
   const extra = maybeFileRoundTrip();
   tests += extra;

@@ -1,6 +1,6 @@
 # Family Tree Viewer — User guide
 
-This is how to run and use the desktop app. For the project pitch, sample licenses, and clone steps, see the [README](../README.md).
+This is how to run and use the desktop app. New to GEDCOM or Ancestry exports: [START.md](START.md). Project pitch and clone steps: [README](../README.md).
 
 **My tree (local)** is editable (SQLite). Sample Gramps/GEDCOM trees stay read-only. The app never invents people and never overwrites `data.gramps`. It binds **`127.0.0.1` only** — it is not a website you share.
 
@@ -55,12 +55,14 @@ Queen portraits and text excerpts are [CC BY-SA 4.0](https://github.com/DavidMSt
 
 You can open a view directly: `http://127.0.0.1:5180/?tree=queen&view=hive`. Add `&person=home` to open the drawer.
 
-## Your own Gramps file
+## Your own file
 
-The viewer looks for `data/data.gramps` under a folder you name, or a sibling `../data/data.gramps`.
+Coming from Ancestry with a `.ged`: [START.md](START.md).
+
+The viewer looks for `data/data.gramps` or `data/data.ged` under a folder you name, or a sibling `../data/` file.
 
 1. Copy `settings.example.json` to `settings.json` next to the README. `settings.json` is gitignored.
-2. Set `personalRoot` to the folder that **contains** `data/data.gramps` (not the file itself).
+2. Set `personalRoot` to the folder that **contains** `data/data.gramps` or `data/data.ged` (not the file itself).
 3. Restart the app or wait a few seconds — it reloads when the tree file on disk changes.
 4. Choose **My tree (local)** from the Tree menu.
 
@@ -84,13 +86,11 @@ Number keys switch views. The current **root** is the person the chart is center
 
 **Click a card** to re-root the tree and open the person drawer. **Shift-click** opens details only (root stays put). Unknown parents stay labeled unknown.
 
-![Fan chart of the British royal sample](screenshots/fan.png)
+![Unknown parents are dashed; gold diamonds mark pedigree collapse.](screenshots/fan.png)
 
-![Fan chart with pedigree-collapse diamonds](screenshots/fan.png)
+![One view of the royal sample — generations up, living names hidden.](screenshots/hive.png)
 
-![Hive 3D generation layers](screenshots/hive.png)
-
-![Hints dashboard](screenshots/hints.png)
+![Brick walls and uncited events. No invented cousins.](screenshots/hints.png)
 
 ## Person drawer
 
@@ -107,7 +107,7 @@ Click the root chip, or a person, to open the drawer on the right. `Esc` closes 
 - **Resources** — extra links you add (stored in `links.json`).
 - **Hints** — research items for this person.
 
-![Person drawer on a historical sample person](screenshots/drawer.png)
+![Parents, spouses, children, kinship, census years, and the citation score.](screenshots/drawer.png)
 
 ## Living privacy
 
@@ -143,7 +143,7 @@ In the palette, type a name or a view. **center** re-roots on that person. **rel
 
 **PNG** / **SVG** in the top bar export the current chart (SVG is Fan and Timeline). Exports are local downloads — they are not uploaded anywhere.
 
-![Timeline by generation](screenshots/timeline.png)
+![Lifespans by generation, plus a places path when the file already has coordinates.](screenshots/timeline.png)
 
 ## Sidecar files (gitignored)
 

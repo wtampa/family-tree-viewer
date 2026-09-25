@@ -129,6 +129,7 @@ export default function HiveView({
   colorByRef.current = colorBy;
   const ancestry = settings.ancestry ?? 8;
   const progeny = settings.progeny ?? 6;
+  const shotMode = typeof document !== "undefined" && document.documentElement.classList.contains("shot-mode");
 
   useEffect(() => { fittedRef.current = false; }, [layout, scope, rootId, ancestry, progeny]);
 
@@ -213,7 +214,7 @@ export default function HiveView({
     const packed = layout === "gen" && heavy;
     if (packed) packGenerationHive(nodes, links, { level: LEVEL });
     return { nodes, links, personCount, truncated, available, heavy, packed };
-  }, [model, rootId, scope, ancestry, progeny, layout]);
+  }, [model, rootId, scope, ancestry, progeny, layout, shotMode]);
 
   const heavy = data.heavy;
   const packed = data.packed;
@@ -226,8 +227,8 @@ export default function HiveView({
   }, [model, query]);
 
   const rendererConfig = useMemo(
-    () => ({ preserveDrawingBuffer: false, antialias: !treeHeavy }),
-    [treeHeavy],
+    () => ({ preserveDrawingBuffer: shotMode, antialias: true }),
+    [shotMode],
   );
 
   useEffect(() => {
@@ -408,7 +409,18 @@ export default function HiveView({
             dagLevelDistance={layout === "radialout" ? 40 : undefined}
             onDagError={() => { /* tolerate loops from data quirks */ }}
             rendererConfig={rendererConfig}
-            onEngineStop={() => { if (!fittedRef.current) { fittedRef.current = true; fgRef.current?.zoomToFit(700, 60); } }}
+            onEngineStop={() => {
+              if (fittedRef.current) return;
+              fittedRef.current = true;
+              const fg = fgRef.current;
+              if (!fg) return;
+              if (shotMode) {
+                fg.zoomToFit(0, 12);
+                fg.cameraPosition({ x: 220, y: 140, z: 260 }, { x: 0, y: 20, z: 0 }, 0);
+              } else {
+                fg.zoomToFit(700, 60);
+              }
+            }}
             nodeThreeObject={nodeObject}
             nodeThreeObjectExtend={false}
             nodeVal={(n) => n.val}

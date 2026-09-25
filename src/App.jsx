@@ -33,10 +33,15 @@ function bootQuery() {
       view: known ? view : "",
       person: q.get("person") || "",
       depth: depth >= 1 && depth <= 8 ? depth : 0,
+      shot: q.get("shot") === "1" || q.get("shot") === "true",
     };
-  } catch { return { tree: "", view: "", person: "" }; }
+  } catch { return { tree: "", view: "", person: "", shot: false }; }
 }
 const BOOT = bootQuery();
+if (typeof document !== "undefined" && BOOT.shot) {
+  document.documentElement.classList.add("shot-mode");
+  if (document.body) document.body.classList.add("shot-mode");
+}
 
 function BootFallback() {
   return (
@@ -75,6 +80,12 @@ export default function App() {
   const [hiveSeen, setHiveSeen] = useState(() => (BOOT.view || LS.get("view", "pedigree")) === "hive");
   const bootTree = useRef(false);
   const [editing, setEditing] = useState(false);
+
+  useEffect(() => {
+    if (!BOOT.shot) return;
+    document.documentElement.classList.add("shot-mode");
+    document.body.classList.add("shot-mode");
+  }, []);
 
   const model = useMemo(() => (payload ? new TreeModel(payload) : null), [payload]);
 

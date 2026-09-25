@@ -8,7 +8,7 @@ The app reads Gramps XML and GEDCOM. It writes a SQLite database only for **My t
 | --- | --- | --- |
 | App | this repository | yes |
 | Your tree | `{personalRoot}/data/tree.db` | no |
-| Frozen Gramps archive | `{personalRoot}/data/data.gramps` | no — imported once, never written |
+| Frozen Gramps or GEDCOM archive | `{personalRoot}/data/data.gramps` or `data/data.ged` | no — imported once, never written |
 | Backups | `{personalRoot}/data/backups/` | no |
 | Gramps / GEDCOM exports | `{personalRoot}/data/exports/` (new timestamped files) | no |
 | Share packs | `{personalRoot}/data/exports/share-…` or `.cache/share/` | no |
@@ -23,7 +23,7 @@ The app reads Gramps XML and GEDCOM. It writes a SQLite database only for **My t
 
 Tables: `people`, `families`, `events`, `places`, `citations`, `sources`, `notes`, `media`, `repositories`, `tags`, plus `meta`, `changes` (undo batches), and `history` (the History view).
 
-First open of My tree imports `data/data.gramps` into `tree.db` if the database is missing. Later opens use the database. Export writes a **new** `.gramps` or `.ged`. The importer refuses to overwrite `data.gramps`.
+First open of My tree imports `data/data.gramps` or `data/data.ged` into `tree.db` if the database is missing. Later opens use the database. Export writes a **new** `.gramps` or `.ged`. The importer refuses to overwrite `data.gramps` or `data.ged`.
 
 ## Sample files
 

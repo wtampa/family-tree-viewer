@@ -1,5 +1,7 @@
 # Family Tree — share with relatives
 
+**In short:** on this computer, **Share view** writes a frozen, read-only folder. Living people are already labeled **Living**. Relatives do not install Node. If you host that folder, use Cloudflare Pages plus Access (an email allowlist), lock the door **before** you upload, and never put `tree.db` or a Gramps/GEDCOM file on GitHub. The steps below are the lock-then-upload path.
+
 Two parts. **Part A** is what you send cousins. **Part B** is what you do on this computer.
 
 Cousins do **not** install Node, Git, or the Family Tree desktop app. They open a link, type their email, and enter a one-time code.

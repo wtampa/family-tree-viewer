@@ -1,7 +1,7 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 title: "Family Tree"
-abstract: "A localhost genealogy app with a generation hive, research hints that never invent people, and SQLite editing. Imports Gramps XML and GEDCOM. Exports new Gramps XML and GEDCOM files."
+abstract: "A local research desk for Gramps and GEDCOM. See the whole tree, score the evidence, and get hints that never invent a person. Your file stays on this computer."
 type: software
 version: 1.0.0
 license: MIT
@@ -13,5 +13,9 @@ keywords:
   - genealogy
   - gramps
   - gedcom
+  - family-history
   - family-tree
+  - citations
+  - offline
+  - privacy
 date-released: "2026-09-25"
