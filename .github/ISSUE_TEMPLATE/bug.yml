@@ -1,0 +1,19 @@
+name: Bug
+description: Something broke on localhost
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: Steps, what you expected, and the sample tree id (queen, presidents, …). Do not paste a real family file or living people's names.
+    validations:
+      required: true
+  - type: input
+    id: node
+    attributes:
+      label: Node version
+      placeholder: "v22"
+    validations:
+      required: true

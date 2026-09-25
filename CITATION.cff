@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "Family Tree"
+abstract: "A localhost genealogy app with a generation hive, research hints that never invent people, and SQLite editing. Imports Gramps XML and GEDCOM. Exports new Gramps XML and GEDCOM files."
+type: software
+version: 1.0.0
+license: MIT
+repository-code: "https://github.com/wtampa/family-tree-viewer"
+url: "https://github.com/wtampa/family-tree-viewer"
+authors:
+  - name: "wtampa"
+keywords:
+  - genealogy
+  - gramps
+  - gedcom
+  - family-tree
+date-released: "2026-09-25"

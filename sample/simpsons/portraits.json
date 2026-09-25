@@ -1,0 +1,93 @@
+{
+  "note": "Names from the published series. Portraits are fetched from the URLs below and are not part of this repository.",
+  "portraits": [
+    {
+      "id": "Abraham_Simpson",
+      "file": "Abraham_Simpson.png",
+      "name": "",
+      "url": "https://upload.wikimedia.org/wikipedia/en/3/3e/Abe_Simpson.png",
+      "title": "File:Abe_Simpson.png",
+      "api": "https://en.wikipedia.org/w/api.php"
+    },
+    {
+      "id": "Bart_Simpson",
+      "file": "Bart_Simpson.png",
+      "name": "",
+      "url": "https://upload.wikimedia.org/wikipedia/en/a/aa/Bart_Simpson_200px.png",
+      "title": "File:Bart_Simpson_200px.png",
+      "api": "https://en.wikipedia.org/w/api.php"
+    },
+    {
+      "id": "Homer_Simpson",
+      "file": "Homer_Simpson.png",
+      "name": "",
+      "url": "https://upload.wikimedia.org/wikipedia/en/0/02/Homer_Simpson_2006.png",
+      "title": "File:Homer_Simpson_2006.png",
+      "api": "https://en.wikipedia.org/w/api.php"
+    },
+    {
+      "id": "Lisa_Simpson",
+      "file": "Lisa_Simpson.png",
+      "name": "",
+      "url": "https://upload.wikimedia.org/wikipedia/en/e/ec/Lisa_Simpson.png",
+      "title": "File:Lisa_Simpson.png",
+      "api": "https://en.wikipedia.org/w/api.php"
+    },
+    {
+      "id": "Maggie_Simpson",
+      "file": "Maggie_Simpson.png",
+      "name": "",
+      "url": "https://upload.wikimedia.org/wikipedia/en/9/9d/Maggie_Simpson.png",
+      "title": "File:Maggie_Simpson.png",
+      "api": "https://en.wikipedia.org/w/api.php"
+    },
+    {
+      "id": "Marge_Simpson",
+      "file": "Marge_Simpson.png",
+      "name": "",
+      "url": "https://upload.wikimedia.org/wikipedia/en/0/0b/Marge_Simpson.png",
+      "title": "File:Marge_Simpson.png",
+      "api": "https://en.wikipedia.org/w/api.php"
+    },
+    {
+      "id": "Patty_Bouvier",
+      "file": "Patty_Bouvier.png",
+      "name": "",
+      "url": "https://upload.wikimedia.org/wikipedia/en/f/f8/Patty_Bouvier.png",
+      "title": "File:Patty_Bouvier.png",
+      "api": "https://en.wikipedia.org/w/api.php"
+    },
+    {
+      "id": "Selma_Bouvier",
+      "file": "Selma_Bouvier.png",
+      "name": "",
+      "url": "https://upload.wikimedia.org/wikipedia/en/b/ba/Selma_Bouvier.png",
+      "title": "File:Selma_Bouvier.png",
+      "api": "https://en.wikipedia.org/w/api.php"
+    },
+    {
+      "id": "Mona_Simpson",
+      "file": "Mona_Simpson.png",
+      "name": "",
+      "url": "https://simpsonswiki.com/wiki/Special:FilePath/Mona_Simpson.png",
+      "title": "File:Mona_Simpson.png",
+      "api": "https://simpsonswiki.com/api.php"
+    },
+    {
+      "id": "Clancy_Bouvier",
+      "file": "Clancy_Bouvier.png",
+      "name": "",
+      "url": "https://simpsonswiki.com/wiki/Special:FilePath/Clarence_Bouvier.png",
+      "title": "File:Clarence_Bouvier.png",
+      "api": "https://simpsonswiki.com/api.php"
+    },
+    {
+      "id": "Jacqueline_Bouvier",
+      "file": "Jacqueline_Bouvier.png",
+      "name": "",
+      "url": "https://simpsonswiki.com/wiki/Special:FilePath/Jacqueline_Bouvier.png",
+      "title": "File:Jacqueline_Bouvier.png",
+      "api": "https://simpsonswiki.com/api.php"
+    }
+  ]
+}

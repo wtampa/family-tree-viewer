@@ -1,0 +1,35 @@
+node_modules/
+dist/
+.cache/
+.cache/share/
+*.log
+
+# Local / personal — never publish the real tree or sidecars
+settings.json
+links.json
+hints-state.json
+media-map.json
+*.tmp
+*.db
+*.db-wal
+*.db-shm
+
+# Local work logs (can name people from a private tree)
+notes/
+
+# Local Cursor rules (machine paths, hung-chat ids)
+AGENTS.md
+
+# Downloaded samples — npm run fetch-samples / fetch-portraits
+sample/_queen_unpack/
+sample/*.zip
+sample/*.part
+sample/**/*.gramps
+sample/**/*.ged
+sample/**/*.gedcom
+!sample/simpsons/Simpsons.ged
+!sample/ducktales/DuckTales.ged
+!sample/harry-potter/HarryPotter.ged
+sample/**/media/
+sample/**/__pycache__/
+sample/**/_src/

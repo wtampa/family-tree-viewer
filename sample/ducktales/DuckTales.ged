@@ -1,0 +1,546 @@
+0 HEAD
+1 GEDC
+2 VERS 5.5.1
+2 FORM LINEAGE-LINKED
+1 CHAR UTF-8
+1 SOUR FamilyTree
+2 NAME Don Rosa US Duck Family Tree 1995
+1 NOTE Local demo of Don Rosa's US Duck Family Tree (Walt Disney's Comics and Stories 600, 1995; Inducks D 11221). Names and relationships are from published Disney comics and episode guides. This file is not a Disney product.
+0 @I1@ INDI
+1 NAME Sir Eider /McDuck/
+2 GIVN Sir Eider
+2 SURN McDuck
+1 SEX M
+1 BIRT
+2 DATE 880
+1 DEAT
+2 DATE 946
+2 PLAC McDuck Castle, Dismal Downs, Scotland
+1 NOTE On Don Rosa's 1995 US chart as a Clan McDuck ancestor. No parent link to Fergus McDuck's line is stated, so none is recorded.
+0 @I2@ INDI
+1 NAME Sir Quackly /McDuck/
+2 GIVN Sir Quackly
+2 SURN McDuck
+1 SEX M
+1 BIRT
+2 DATE 1010
+1 DEAT
+2 DATE 1057
+1 NOTE On Don Rosa's 1995 US chart as a Clan McDuck ancestor. No parent link to Fergus McDuck's line is stated, so none is recorded.
+0 @I3@ INDI
+1 NAME Sir Stuft /McDuck/
+2 GIVN Sir Stuft
+2 SURN McDuck
+1 SEX M
+1 BIRT
+2 DATE 1110
+1 DEAT
+2 DATE 1175
+1 FAMS @F1@
+1 NOTE Father of Sir Roast McDuck on the Clan McDuck line Don Rosa used. Mother of Roast is not named.
+0 @I4@ INDI
+1 NAME Sir Roast /McDuck/
+2 GIVN Sir Roast
+2 SURN McDuck
+1 SEX M
+1 OBJE
+2 FILE media/Sir_Roast_McDuck.png
+1 BIRT
+2 DATE 1159
+1 DEAT
+2 DATE 1205
+1 FAMC @F1@
+1 FAMS @F2@
+1 NOTE Son of Sir Stuft McDuck and father of Sir Swamphole McDuck. His mother is not named.
+0 @I5@ INDI
+1 NAME Sir Swamphole /McDuck/
+2 GIVN Sir Swamphole
+2 SURN McDuck
+1 SEX M
+1 OBJE
+2 FILE media/Sir_Swamphole_McDuck.png
+1 BIRT
+2 DATE 1190
+1 DEAT
+2 DATE 1260
+1 FAMC @F2@
+1 NOTE Son of Sir Roast McDuck. A Carl Barks painting gives a different span (1161-1221); this file keeps Rosa's dates. No link onward to Hugh McDuck is stated.
+0 @I6@ INDI
+1 NAME Malcolm /McDuck/
+2 GIVN Malcolm
+2 NICK Matey
+2 SURN McDuck
+1 SEX M
+1 BIRT
+2 DATE 1530
+1 DEAT
+2 DATE 1564
+1 NOTE Called Matey in Carl Barks. On the 1995 US chart as a McDuck ancestor and shipmate of Pintail Duck. No parent or child link is stated.
+0 @I7@ INDI
+1 NAME Hugh /McDuck/
+2 GIVN Hugh
+2 NICK Seafoam
+2 SURN McDuck
+1 SEX M
+1 OBJE
+2 FILE media/Hugh_McDuck.png
+1 BIRT
+2 DATE 1710
+1 DEAT
+2 DATE 1776
+1 NOTE Don Rosa calls him Scrooge's great-great-great-grandfather. The 1995 chart does not name the people between him and Dingus McDuck, so no family link is recorded.
+0 @I8@ INDI
+1 NAME Pintail /Duck/
+2 GIVN Pintail
+2 SURN Duck
+1 SEX M
+1 NOTE Sixteenth-century Duck on the 1995 US chart, boatswain with Malcolm McDuck. No parent or child link to Humperdink Duck is stated.
+0 @I9@ INDI
+1 NAME Quagmire /McDuck/
+2 GIVN Quagmire
+2 SURN McDuck
+1 SEX M
+1 OBJE
+2 FILE media/Quagmire_McDuck.png
+1 NOTE Brother of Dirty Dingus McDuck and Scrooge's great-uncle on the 1995 US chart. Their parents are not named, so no family record joins the brothers.
+0 @I10@ INDI
+1 NAME Dingus /McDuck/
+2 GIVN Dingus
+2 NICK Dirty
+2 SURN McDuck
+1 SEX M
+1 OBJE
+2 FILE media/Dingus_McDuck.png
+1 FAMS @F3@
+1 NOTE Paternal grandfather of Scrooge McDuck. Brother of Quagmire McDuck. Some non-Rosa stories call this grandfather Titus McDuck; this file keeps Rosa's name.
+0 @I11@ INDI
+1 NAME Molly /Mallard/
+2 GIVN Molly
+2 SURN Mallard
+1 SEX F
+1 OBJE
+2 FILE media/Molly_Mallard.png
+1 FAMS @F3@
+1 NOTE Wife of Dirty Dingus McDuck and mother of Angus, Jake, and Fergus McDuck on Don Rosa's chart.
+0 @I12@ INDI
+1 NAME Angus /McDuck/
+2 GIVN Angus
+2 NICK Pothole
+2 SURN McDuck
+1 SEX M
+1 OBJE
+2 FILE media/Angus_McDuck.png
+1 BIRT
+2 DATE 1829
+2 PLAC Glasgow, Scotland
+1 FAMC @F3@
+1 NOTE Scrooge's paternal uncle. Pothole is the riverboat nickname; Angus is the name on Don Rosa's chart.
+0 @I13@ INDI
+1 NAME Jake /McDuck/
+2 GIVN Jake
+2 SURN McDuck
+1 SEX M
+1 OBJE
+2 FILE media/Jake_McDuck.png
+1 BIRT
+2 DATE 1832
+1 FAMC @F3@
+1 NOTE Scrooge's paternal uncle. Don Rosa's chart gives him no children.
+0 @I14@ INDI
+1 NAME Fergus /McDuck/
+2 GIVN Fergus
+2 SURN McDuck
+1 SEX M
+1 OBJE
+2 FILE media/Fergus_McDuck.png
+1 BIRT
+2 DATE 1835
+2 PLAC Glasgow, Scotland
+1 DEAT
+2 DATE 1902
+2 PLAC Dismal Downs, Scotland
+1 FAMC @F3@
+1 FAMS @F4@
+1 NOTE Father of Scrooge, Matilda, and Hortense. Carl Barks had called Scrooge's father Old Scotty McDuck; Rosa named him Fergus.
+0 @I15@ INDI
+1 NAME Downy /O'Drake/
+2 GIVN Downy
+2 SURN O'Drake
+1 SEX F
+1 OBJE
+2 FILE media/Downy_ODrake.png
+1 BIRT
+2 DATE 1840
+1 DEAT
+2 DATE 1897
+2 PLAC Dismal Downs, Scotland
+1 FAMS @F4@
+1 NOTE Scrooge McDuck's mother on Don Rosa's chart. Irish origin. Buried in the McDuck cemetery.
+0 @I16@ INDI
+1 NAME Scrooge /McDuck/
+2 GIVN Scrooge
+2 SURN McDuck
+1 SEX M
+1 OBJE
+2 FILE media/Scrooge_McDuck.png
+1 BIRT
+2 DATE 1867
+1 FAMC @F4@
+1 NOTE Uncle of Donald Duck on Don Rosa's US Duck Family Tree. Unmarried on that chart. DuckTales (1987) uses this household and adds no blood parent. The 2017 series finale says Webby Vanderquack is Scrooge's daughter by cloning and was named April; that claim is not a family link here.
+0 @I17@ INDI
+1 NAME Matilda /McDuck/
+2 GIVN Matilda
+2 SURN McDuck
+1 SEX F
+1 OBJE
+2 FILE media/Matilda_McDuck.png
+1 BIRT
+2 DATE 1871
+2 PLAC Glasgow, Scotland
+1 FAMC @F4@
+1 NOTE Sister of Scrooge and Hortense. The 1995 US chart shows no husband. Rosa later said he still believed she married Ludwig Von Drake; that marriage is not on this chart. Barks's earlier sketch had her adopt Gladstone Gander; Rosa did not.
+0 @I18@ INDI
+1 NAME Hortense /McDuck/
+2 GIVN Hortense
+2 SURN McDuck
+1 SEX F
+1 OBJE
+2 FILE media/Hortense_McDuck.png
+1 BIRT
+2 DATE 1876
+2 PLAC Glasgow, Scotland
+1 FAMC @F4@
+1 FAMS @F12@
+1 NOTE Married Quackmore Duck in 1920. Mother of Donald and Della.
+0 @I19@ INDI
+1 NAME Cornelius /Coot/
+2 GIVN Cornelius
+2 SURN Coot
+1 SEX M
+1 OBJE
+2 FILE media/Cornelius_Coot.png
+1 BIRT
+2 DATE 1790
+1 DEAT
+2 DATE 1880
+1 FAMS @F5@
+1 NOTE Founder of Duckburg. Father of Clinton Coot on Don Rosa's line. Rosa did not name Clinton's mother, and he thought Cornelius was probably not married to her.
+0 @I20@ INDI
+1 NAME Clinton /Coot/
+2 GIVN Clinton
+2 SURN Coot
+1 SEX M
+1 OBJE
+2 FILE media/Clinton_Coot.png
+1 BIRT
+2 DATE 1830
+1 DEAT
+2 DATE 1910
+1 FAMC @F5@
+1 FAMS @F6@
+1 NOTE Son of Cornelius Coot, husband of Gertrude Gadwall, and father of Elvira Coot and Casey Coot. Rosa named him for Bill Clinton.
+0 @I21@ INDI
+1 NAME Gertrude /Gadwall/
+2 GIVN Gertrude
+2 SURN Gadwall
+1 SEX F
+1 FAMS @F6@
+1 NOTE Wife of Clinton Coot and mother of Elvira and Casey. She appears on Don Rosa's chart and not in a story.
+0 @I22@ INDI
+1 NAME Casey /Coot/
+2 GIVN Casey
+2 SURN Coot
+1 SEX M
+1 BIRT
+2 DATE 1860
+1 FAMC @F6@
+1 FAMS @F7@
+1 NOTE Brother of Elvira Coot. Father of Fanny Coot and Cuthbert Coot.
+0 @I23@ INDI
+1 NAME Gretchen /Grebe/
+2 GIVN Gretchen
+2 SURN Grebe
+1 SEX F
+1 FAMS @F7@
+1 NOTE Wife of Casey Coot and mother of Fanny and Cuthbert. She appears on Don Rosa's chart and not in a story.
+0 @I24@ INDI
+1 NAME Elvira /Coot/
+2 GIVN Elvira
+2 NICK Grandma Duck
+2 SURN Coot
+1 SEX F
+1 OBJE
+2 FILE media/Elvira_Coot.png
+1 BIRT
+2 DATE ABT OCT 1855
+1 FAMC @F6@
+1 FAMS @F8@
+1 NOTE Grandma Duck. Donald's paternal grandmother. A 1950 story used Elviry; another used Abigail. This file keeps Rosa's Elvira Coot.
+0 @I25@ INDI
+1 NAME Humperdink /Duck/
+2 GIVN Humperdink
+2 SURN Duck
+1 SEX M
+1 OBJE
+2 FILE media/Humperdink_Duck.png
+1 FAMS @F8@
+1 NOTE Husband of Elvira Coot and father of Quackmore, Daphne, and Eider. Rosa first sketched the name Dabney, then used Humperdink. Known in the family as Pa Duck and later Grandpa Duck.
+0 @I26@ INDI
+1 NAME Fanny /Coot/
+2 GIVN Fanny
+2 SURN Coot
+1 SEX F
+1 OBJE
+2 FILE media/Fanny_Coot.png
+1 FAMC @F7@
+1 FAMS @F9@
+1 NOTE Mother of Gus Goose. The 1938 strip signs her letter Aunt Fanny. Niece of Elvira Coot, not her sister.
+0 @I27@ INDI
+1 NAME Cuthbert /Coot/
+2 GIVN Cuthbert
+2 SURN Coot
+1 SEX M
+1 OBJE
+2 FILE media/Cuthbert_Coot.png
+1 FAMC @F7@
+1 NOTE Son of Casey Coot and Gretchen Grebe. Donald's distant cousin and a rancher in Carl Barks. No spouse or child is stated on the 1995 chart.
+0 @I28@ INDI
+1 NAME Luke /Goose/
+2 GIVN Luke
+2 SURN Goose
+1 SEX M
+1 FAMS @F9@
+1 NOTE Husband of Fanny Coot and father of Gus Goose. Barks once had Luke the Goose as Gladstone's father and Gus's uncle; Rosa made Luke Gus's father instead.
+0 @I29@ INDI
+1 NAME Gus /Goose/
+2 GIVN Gus
+2 NICK Gustav
+2 SURN Goose
+1 SEX M
+1 OBJE
+2 FILE media/Gus_Goose.png
+1 FAMC @F9@
+1 NOTE Son of Luke Goose and Fanny Coot. Donald's paternal second cousin. Comics also call him Gustav.
+0 @I30@ INDI
+1 NAME Quackmore /Duck/
+2 GIVN Quackmore
+2 SURN Duck
+1 SEX M
+1 OBJE
+2 FILE media/Quackmore_Duck.png
+1 BIRT
+2 DATE 1875
+2 PLAC Duckburg
+1 FAMC @F8@
+1 FAMS @F12@
+1 NOTE Father of Donald and Della. Married Hortense McDuck in 1920.
+0 @I31@ INDI
+1 NAME Daphne /Duck/
+2 GIVN Daphne
+2 SURN Duck
+1 SEX F
+1 OBJE
+2 FILE media/Daphne_Duck.png
+1 FAMC @F8@
+1 FAMS @F11@
+1 NOTE Mother of Gladstone Gander. Daughter of Humperdink Duck and Elvira Coot.
+0 @I32@ INDI
+1 NAME Eider /Duck/
+2 GIVN Eider
+2 SURN Duck
+1 SEX M
+1 FAMC @F8@
+1 FAMS @F10@
+1 NOTE Father of Abner Duck and Fethry Duck. Son of Humperdink Duck and Elvira Coot. Not Sir Eider McDuck.
+0 @I33@ INDI
+1 NAME Goostave /Gander/
+2 GIVN Goostave
+2 SURN Gander
+1 SEX M
+1 OBJE
+2 FILE media/Goostave_Gander.png
+1 FAMS @F11@
+1 NOTE Father of Gladstone Gander and husband of Daphne Duck. Barks's first sketch married a Goosetave Gander to Matilda McDuck as Gladstone's adoptive father; Rosa did not use that adoption.
+0 @I34@ INDI
+1 NAME Gladstone /Gander/
+2 GIVN Gladstone
+2 SURN Gander
+1 SEX M
+1 OBJE
+2 FILE media/Gladstone_Gander.png
+1 BIRT
+2 DATE 1920
+1 FAMC @F11@
+1 NOTE Son of Goostave Gander and Daphne Duck. Donald's first cousin. Rosa did not use Barks's adoption by Matilda McDuck.
+0 @I35@ INDI
+1 NAME Lulubelle /Loon/
+2 GIVN Lulubelle
+2 SURN Loon
+1 SEX F
+1 FAMS @F10@
+1 NOTE Wife of Eider Duck and mother of Abner Duck and Fethry Duck. She appears on Don Rosa's chart and not in a story.
+0 @I36@ INDI
+1 NAME Abner /Duck/
+2 GIVN Abner
+2 NICK Whitewater
+2 SURN Duck
+1 SEX M
+1 OBJE
+2 FILE media/Abner_Duck.png
+1 FAMC @F10@
+1 NOTE Son of Eider Duck and Lulubelle Loon, brother of Fethry Duck. Carl Barks used only the nickname Whitewater and called him a distant cousin.
+0 @I37@ INDI
+1 NAME Fethry /Duck/
+2 GIVN Fethry
+2 SURN Duck
+1 SEX M
+1 OBJE
+2 FILE media/Fethry_Duck.png
+1 FAMC @F10@
+1 NOTE Son of Eider Duck and Lulubelle Loon. Rosa included him under editorial pressure; he is not in Carl Barks's stories.
+0 @I38@ INDI
+1 NAME Donald /Duck/
+2 GIVN Donald
+2 SURN Duck
+1 SEX M
+1 OBJE
+2 FILE media/Donald_Duck.png
+1 BIRT
+2 DATE ABT 9 JUN 1920
+1 FAMC @F12@
+1 NOTE Son of Quackmore Duck and Hortense McDuck, twin of Della Duck. Daisy Duck is his girlfriend on the 1995 chart sidebar, not his wife, so no marriage is recorded. April, May, and June are not his daughters on that chart.
+0 @I39@ INDI
+1 NAME Della /Duck/
+2 GIVN Della
+2 SURN Duck
+1 SEX F
+1 OBJE
+2 FILE media/Della_Duck.png
+1 BIRT
+2 DATE ABT 9 JUN 1920
+1 FAMC @F12@
+1 FAMS @F13@
+1 NOTE Mother of Huey, Dewey, and Louie, and Donald's twin. A 1937 strip called her Donald's cousin; Rosa's chart makes her his sister. The boys' father is drawn on the chart with a hidden face and no given name, so he is omitted. A cartoon nickname, Dumbella, is not used as her name.
+0 @I40@ INDI
+1 NAME Huey /Duck/
+2 GIVN Huey
+2 SURN Duck
+1 SEX M
+1 OBJE
+2 FILE media/Huey_Duck.png
+1 BIRT
+2 DATE ABT 1940
+1 FAMC @F13@
+1 NOTE Son of Della Duck and nephew of Donald Duck. His father is unnamed on Don Rosa's chart and is not recorded.
+0 @I41@ INDI
+1 NAME Dewey /Duck/
+2 GIVN Dewey
+2 SURN Duck
+1 SEX M
+1 OBJE
+2 FILE media/Dewey_Duck.png
+1 BIRT
+2 DATE ABT 1940
+1 FAMC @F13@
+1 NOTE Son of Della Duck and nephew of Donald Duck. His father is unnamed on Don Rosa's chart and is not recorded.
+0 @I42@ INDI
+1 NAME Louie /Duck/
+2 GIVN Louie
+2 SURN Duck
+1 SEX M
+1 OBJE
+2 FILE media/Louie_Duck.png
+1 BIRT
+2 DATE ABT 1940
+1 FAMC @F13@
+1 NOTE Son of Della Duck and nephew of Donald Duck. His father is unnamed on Don Rosa's chart and is not recorded.
+0 @I43@ INDI
+1 NAME Daisy /Duck/
+2 GIVN Daisy
+2 SURN Duck
+1 SEX F
+1 OBJE
+2 FILE media/Daisy_Duck.png
+1 NOTE Donald Duck's girlfriend on the sidebar of Don Rosa's US chart, not his wife. No marriage or child link is recorded. April, May, and June are not in this file.
+0 @F1@ FAM
+1 HUSB @I3@
+1 CHIL @I4@
+0 @F2@ FAM
+1 HUSB @I4@
+1 CHIL @I5@
+0 @F3@ FAM
+1 HUSB @I10@
+1 WIFE @I11@
+1 CHIL @I12@
+1 CHIL @I13@
+1 CHIL @I14@
+1 MARR
+1 NOTE Dingus McDuck and Molly Mallard, parents of Angus, Jake, and Fergus.
+0 @F4@ FAM
+1 HUSB @I14@
+1 WIFE @I15@
+1 CHIL @I16@
+1 CHIL @I17@
+1 CHIL @I18@
+1 MARR
+1 NOTE Fergus McDuck and Downy O'Drake, parents of Scrooge, Matilda, and Hortense.
+0 @F5@ FAM
+1 HUSB @I19@
+1 CHIL @I20@
+1 NOTE Cornelius Coot is Clinton's stated father. Clinton's mother is not named.
+0 @F6@ FAM
+1 HUSB @I20@
+1 WIFE @I21@
+1 CHIL @I24@
+1 CHIL @I22@
+1 MARR
+1 NOTE Clinton Coot and Gertrude Gadwall, parents of Elvira and Casey.
+0 @F7@ FAM
+1 HUSB @I22@
+1 WIFE @I23@
+1 CHIL @I26@
+1 CHIL @I27@
+1 MARR
+1 NOTE Casey Coot and Gretchen Grebe, parents of Fanny and Cuthbert.
+0 @F8@ FAM
+1 HUSB @I25@
+1 WIFE @I24@
+1 CHIL @I30@
+1 CHIL @I31@
+1 CHIL @I32@
+1 MARR
+1 NOTE Humperdink Duck and Elvira Coot, parents of Quackmore, Daphne, and Eider.
+0 @F9@ FAM
+1 HUSB @I28@
+1 WIFE @I26@
+1 CHIL @I29@
+1 MARR
+1 NOTE Luke Goose and Fanny Coot, parents of Gus Goose.
+0 @F10@ FAM
+1 HUSB @I32@
+1 WIFE @I35@
+1 CHIL @I36@
+1 CHIL @I37@
+1 MARR
+1 NOTE Eider Duck and Lulubelle Loon, parents of Abner and Fethry.
+0 @F11@ FAM
+1 HUSB @I33@
+1 WIFE @I31@
+1 CHIL @I34@
+1 MARR
+1 NOTE Goostave Gander and Daphne Duck, parents of Gladstone Gander.
+0 @F12@ FAM
+1 HUSB @I30@
+1 WIFE @I18@
+1 CHIL @I38@
+1 CHIL @I39@
+1 MARR
+2 DATE 1920
+1 NOTE Quackmore Duck and Hortense McDuck married in 1920 and are the parents of Donald and Della.
+0 @F13@ FAM
+1 WIFE @I39@
+1 CHIL @I40@
+1 CHIL @I41@
+1 CHIL @I42@
+1 NOTE Della Duck is the stated mother. The father's given name is not on the chart, so no husband is recorded.
+0 TRLR

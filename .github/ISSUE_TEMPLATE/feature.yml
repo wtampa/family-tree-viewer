@@ -1,0 +1,12 @@
+name: Feature
+description: Suggest a change
+title: "[feature] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What should change
+      description: Which view or file. The server stays on 127.0.0.1. No public upload.
+    validations:
+      required: true

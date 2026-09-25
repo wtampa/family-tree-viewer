@@ -1,0 +1,35 @@
+{
+  "name": "family-tree-viewer",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Localhost family tree app with a generation hive, research hints, and SQLite editing (Gramps/GEDCOM import; Gramps XML and GEDCOM export)",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && vite build --config vite.share.config.mjs",
+    "preview": "vite preview",
+    "serve": "node server.mjs",
+    "check": "node server/check.mjs",
+    "check:samples": "node server/check.mjs --all",
+    "fetch-samples": "node server/fetch-samples.mjs",
+    "fetch-portraits": "node server/fetch-portraits.mjs"
+  },
+  "dependencies": {
+    "cmdk": "^1.1.1",
+    "d3": "^7.9.0",
+    "family-chart": "^0.9.0",
+    "fast-xml-parser": "^5.10.1",
+    "framer-motion": "^12.23.0",
+    "html-to-image": "^1.11.13",
+    "link-preview-js": "^4.0.0",
+    "pdfjs-dist": "^5.4.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-force-graph-3d": "^1.26.1",
+    "three": "^0.185.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^6.0.11"
+  }
+}

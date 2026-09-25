@@ -1,0 +1,13 @@
+{
+  "treeId": "queen",
+  "personalRoot": "",
+  "homeByTree": {},
+  "hideLivingByTree": {
+    "queen": true,
+    "presidents": true,
+    "ingalls": true,
+    "royal92": true,
+    "personal": false
+  },
+  "note": "Copy to settings.json (gitignored). Set personalRoot to the folder that contains data/data.gramps (imported once into data/tree.db). Never point this at the app folder."
+}

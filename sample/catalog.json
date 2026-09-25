@@ -1,0 +1,81 @@
+{
+  "trees": [
+    {
+      "id": "queen",
+      "title": "British royal family",
+      "blurb": "Gramps Web demo tree. Not a historical authority.",
+      "file": "sample/queen/queen.gramps",
+      "license": "CC BY-SA 4.0",
+      "source": "https://github.com/DavidMStraub/gramps-web-example-tree-queen",
+      "homeHints": ["Elizabeth II", "Elizabeth Alexandra Mary", "Victoria"],
+      "mediaRoots": ["sample/queen/media"]
+    },
+    {
+      "id": "presidents",
+      "title": "US Presidents",
+      "blurb": "Sample presidential kinship file from the Gramps example-trees collection.",
+      "file": "sample/presidents/US_Presidents_2022-11-02.gramps",
+      "license": "See upstream example-Gramps-Trees",
+      "source": "https://github.com/emyoulation/example-gramps-trees",
+      "homeHints": ["George Washington", "Abraham Lincoln"]
+    },
+    {
+      "id": "ingalls",
+      "title": "Ingalls family (1880)",
+      "blurb": "Little House / 1880 census teaching file. Small on purpose.",
+      "file": "sample/ingalls/1880_Ingalls_Family_2024-01-10.gramps",
+      "license": "See upstream example-Gramps-Trees",
+      "source": "https://github.com/emyoulation/example-gramps-trees",
+      "homeHints": ["Laura Elizabeth Wilder", "Laura Elizabeth"]
+    },
+    {
+      "id": "simpsons",
+      "title": "The Simpsons",
+      "blurb": "Cartoon family used as a small demo. Portraits are not in the repository; fetch-portraits downloads them from the Simpsons wiki onto your machine.",
+      "file": "sample/simpsons/Simpsons.ged",
+      "license": "Names and relationships from the published series. Not a Fox product. Character portraits are not distributed; npm run fetch-portraits downloads them from the Simpsons Fandom wiki.",
+      "source": "",
+      "homeHints": ["Homer Simpson"],
+      "mediaRoots": ["sample/simpsons/media"]
+    },
+    {
+      "id": "royal92",
+      "title": "European royalty (royal92)",
+      "blurb": "Classic public-domain GEDCOM, ~3,000 people. Weak on French/Spanish lines.",
+      "file": "sample/royal92/royal92.ged",
+      "license": "Public domain (Denis R. Reid / royal92.ged)",
+      "source": "https://github.com/emyoulation/example-gramps-trees",
+      "homeHints": ["Victoria Hanover", "Victoria", "Elizabeth II"]
+    },
+    {
+      "id": "ducktales",
+      "title": "Duck family (DuckTales)",
+      "blurb": "Don Rosa's Clan McDuck / Duck / Coot tree, which the DuckTales shows use. Not a mix of every contradictory comic.",
+      "file": "sample/ducktales/DuckTales.ged",
+      "license": "Names and relationships from Don Rosa's published Duck Family Tree and episode guides. Not a Disney product. Character portraits are not distributed; npm run fetch-portraits downloads them from the Disney and DuckTales Fandom wikis.",
+      "source": "",
+      "homeHints": ["Scrooge McDuck", "Donald Duck"],
+      "mediaRoots": ["sample/ducktales/media"]
+    },
+    {
+      "id": "asoiaf-kings",
+      "title": "Westeros kings",
+      "blurb": "GenoPro Song of Ice and Fire kingdom tree, fetched from its public origin. Portraits are not in the repository; fetch-portraits downloads them from A Wiki of Ice and Fire onto your machine.",
+      "file": "sample/asoiaf/Kings-GenoPro.ged",
+      "license": "GEDCOM from the public GenoPro tree by AngelEyes (Kings of Westeros). Not a genealogical authority and not an HBO product. Character portraits are not distributed; npm run fetch-portraits downloads them from A Wiki of Ice and Fire.",
+      "source": "https://familytrees.genopro.com/AngelEyes/KINGS/FamilyTree.ged",
+      "homeHints": ["Eddard Stark", "Daenerys Targaryen", "Jon Snow"],
+      "mediaRoots": ["sample/asoiaf/media"]
+    },
+    {
+      "id": "harry-potter",
+      "title": "Harry Potter family",
+      "blurb": "Fan family tree of the Potter, Weasley, Black, and related lines. Portraits are not in the repository; fetch-portraits downloads them from the Harry Potter wiki onto your machine.",
+      "file": "sample/harry-potter/HarryPotter.ged",
+      "license": "Names and relationships from the published books. Not a Warner Bros. product. Character portraits are not distributed; npm run fetch-portraits downloads them from the Harry Potter Fandom wiki.",
+      "source": "",
+      "homeHints": ["Harry Potter"],
+      "mediaRoots": ["sample/harry-potter/media"]
+    }
+  ]
+}
