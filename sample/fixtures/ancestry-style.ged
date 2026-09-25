@@ -1,0 +1,82 @@
+﻿0 HEAD
+1 SOUR Ancestry.com
+2 NAME Ancestry.com Family Trees
+2 VERS 1.0
+1 DATE 1 JAN 2020
+1 GEDC
+2 VERS 5.5.1
+2 FORM LINEAGE-LINKED
+1 CHAR UTF-8
+1 FILE ancestry-style.ged
+0 @I1@ INDI
+1 NAME Ada /Example/
+2 GIVN Ada
+2 SURN Example
+1 SEX F
+1 BIRT
+2 DATE 1 JAN 1840
+2 PLAC Exampleton, Fiction County, USA
+2 SOUR @S1@
+3 PAGE 12
+3 QUAY 3
+3 _APID 1,1234::5678
+1 DEAT
+2 DATE 2 FEB 1900
+2 PLAC Exampleton, Fiction County, USA
+1 BURI
+2 DATE 1 JAN 1899
+2 PLAC Exampleton Cemetery
+1 NOTE @N1@
+1 OBJE @M1@
+1 FAMS @F1@
+1 FAMC @F2@
+0 @I2@ INDI
+1 NAME Bram Story
+1 SEX M
+1 BIRT
+2 DATE 1838
+2 PLAC Exampleton, Fiction County, USA
+1 FAMS @F1@
+0 @I3@ INDI
+1 NAME Cora /Example/
+1 SEX F
+1 BIRT
+2 DATE 1865
+2 PLAC Exampleton, Fiction County, USA
+1 FAMC @F1@
+0 @I4@ INDI
+1 NAME /Example/
+1 SEX M
+1 FAMS @F2@
+0 @I5@ INDI
+1 NAME Dora /Placeholder/
+1 SEX F
+1 FAMS @F2@
+0 @F1@ FAM
+1 HUSB @I2@
+1 WIFE @I1@
+1 CHIL @I3@
+1 MARR
+2 DATE 1860
+2 PLAC Exampleton, Fiction County, USA
+2 SOUR @S2@
+3 PAGE 4
+3 QUAY 1
+0 @F2@ FAM
+1 HUSB @I4@
+1 WIFE @I5@
+1 CHIL @I1@
+0 @S1@ SOUR
+1 TITL Registro Civil de Exampleton
+1 AUTH Fiction Registrar
+1 PUBL Exampleton
+0 @S2@ SOUR
+1 TITL Florida Death Index
+0 @N1@ NOTE Ada kept a long research note that
+1 CONC  continues on the same line
+1 CONT and a second line about the parish.
+0 @M1@ OBJE
+1 FILE portraits/ada-example.jpg
+2 FORM jpg
+1 TITL Ada Example portrait
+0 TRLR

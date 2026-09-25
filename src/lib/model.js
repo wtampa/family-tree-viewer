@@ -404,10 +404,11 @@ export class TreeModel {
   }
 
   // ---------- family-chart adapter ----------
-  /** Full dataset in f3 format: [{ id, data:{...}, rels:{ parents, spouses, children } }] */
-  toF3() {
+  /** f3 rows. Pass a Set of ids to build just that subset (root should be first in the set). */
+  toF3(onlyIds) {
     const out = [];
-    for (const p of Object.values(this.people)) {
+    const list = onlyIds ? [...onlyIds].map((id) => this.people[id]).filter(Boolean) : Object.values(this.people);
+    for (const p of list) {
       const v = this.vitals(p.id);
       const c = this.conf(p.id);
       const parents = this.parents(p.id);

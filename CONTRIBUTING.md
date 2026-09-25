@@ -1,6 +1,16 @@
 # Contributing
 
-Family Tree is a localhost app. Pull requests are welcome for bug fixes, views, and docs.
+Family Tree Viewer is a localhost research desk. Pull requests are welcome for bug fixes, views, and docs.
+
+## Public rules
+
+- Do not write `data.gramps` in place. SQLite is the store. Exports are new timestamped files.
+- Do not invent given names. Unknown parents stay unknown.
+- Bind `127.0.0.1` only. Do not add a public upload API or bind `0.0.0.0`.
+- Do not commit sidecars (`settings.json`, `links.json`, `hints-state.json`, `media-map.json`), `notes/`, `*.db`, or a real family `.gramps` / `.ged`.
+- Before a pull request, run `npm run check -- --all`.
+
+Local Cursor notes live in `AGENTS.md` (gitignored, so machine paths stay off GitHub). This file is the public summary.
 
 ## Setup
 

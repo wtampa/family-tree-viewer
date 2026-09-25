@@ -72,6 +72,7 @@ npm run fetch-portraits
 ## Quick start
 
 - **Windows:** double-click `Open Family Tree.bat`. It starts Node on `127.0.0.1:5180` and opens a chromeless Edge window. Re-clicking reuses the server. First run installs and builds. Optional desktop icon: right-click `Put Family Tree on Desktop.ps1` → Run with PowerShell.
+- **Mac / Linux:** `./start.sh`. It installs and builds if needed, starts Node on `127.0.0.1:5180`, and opens the default browser.
 - **Any OS:** `npm run serve`, then open `http://127.0.0.1:5180/`.
 - Dev: `npm run dev` (Vite on 5181, proxies `/api`).
 - Parser check: `npm run check` or `npm run check -- --all`.

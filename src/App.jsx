@@ -17,6 +17,11 @@ const SourcesView = lazy(() => import("./views/SourcesView.jsx"));
 const HintsView = lazy(() => import("./views/HintsView.jsx"));
 const HistoryView = lazy(() => import("./views/HistoryView.jsx"));
 
+function compareHints(a, b) {
+  const pin = (h) => (h.state === "pinned" ? (h.wall?.nextRecord ? 2 : 1) : 0);
+  return pin(b) - pin(a) || b.priority - a.priority || String(a.title).localeCompare(String(b.title));
+}
+
 const LS = {
   get(k, d) { try { const v = localStorage.getItem(`ftv:${k}`); return v == null ? d : JSON.parse(v); } catch { return d; } },
   set(k, v) { try { localStorage.setItem(`ftv:${k}`, JSON.stringify(v)); } catch { /* ignore */ } },
@@ -64,6 +69,8 @@ export default function App() {
   const [query, setQuery] = useState("");
   const [palette, setPalette] = useState(false);
   const [hints, setHints] = useState(null);
+  const [hintsMeta, setHintsMeta] = useState({ scope: "", total: 0 });
+  const [hintsScope, setHintsScope] = useState("ancestors");
   const [hintsLoading, setHintsLoading] = useState(false);
   const [history, setHistory] = useState(null);
   const [historyLoading, setHistoryLoading] = useState(false);
@@ -77,6 +84,7 @@ export default function App() {
   const treePickRef = useRef(null);
   const exportRef = useRef(null);
   const versionRef = useRef(0);
+  const hintReq = useRef(0);
   const [hiveSeen, setHiveSeen] = useState(() => (BOOT.view || LS.get("view", "pedigree")) === "hive");
   const bootTree = useRef(false);
   const [editing, setEditing] = useState(false);
@@ -101,9 +109,20 @@ export default function App() {
     } catch (e) { setError(e.message); }
   }, []);
 
-  const loadHints = useCallback(async () => {
+  const loadHints = useCallback(async (scope) => {
+    const want = scope === "all" ? "all" : "ancestors";
+    const ticket = ++hintReq.current;
     setHintsLoading(true);
-    try { const h = await api.hints(); setHints(h.hints || []); } catch (e) { setToast(e.message); } finally { setHintsLoading(false); }
+    try {
+      const h = await api.hints(want);
+      if (ticket !== hintReq.current) return;
+      setHints(h.hints || []);
+      setHintsMeta({ scope: h.scope || want, total: Number.isFinite(h.total) ? h.total : (h.hints || []).length });
+    } catch (e) {
+      if (ticket === hintReq.current) setToast(e.message);
+    } finally {
+      if (ticket === hintReq.current) setHintsLoading(false);
+    }
   }, []);
   const loadHistory = useCallback(async () => {
     setHistoryLoading(true);
@@ -114,9 +133,12 @@ export default function App() {
   useEffect(() => {
     if (!model) return;
     if (view !== "hints" && !selected) return;
-    if (hints || hintsLoading) return;
-    loadHints();
-  }, [model, view, selected, hints, hintsLoading, loadHints]);
+    const personNeedsAll = Boolean(selected && model.generations[selected] === undefined);
+    const want = (view === "hints" && hintsScope === "all") || personNeedsAll ? "all" : "ancestors";
+    if (hints && hintsMeta.scope === want) return;
+    if (hintsLoading) return;
+    loadHints(want);
+  }, [model, view, selected, hints, hintsLoading, hintsScope, hintsMeta.scope, loadHints]);
   useEffect(() => {
     if (!model || view !== "history") return;
     if (history || historyLoading) return;
@@ -216,7 +238,7 @@ export default function App() {
   }, [model, openPerson]);
   const hintState = useCallback(async (id, state) => {
     await api.setHintState(id, state);
-    setHints((hs) => (hs || []).map((h) => (h.id === id ? { ...h, state, priority: state === "pinned" ? h.priority + 100 : h.state === "pinned" ? h.priority - 100 : h.priority } : h)).sort((a, b) => b.priority - a.priority));
+    setHints((hs) => (hs || []).map((h) => (h.id === id ? { ...h, state, priority: state === "pinned" ? h.priority + 100 : h.state === "pinned" ? h.priority - 100 : h.priority } : h)).sort(compareHints));
   }, []);
   const linksChange = useCallback((all) => setPayload((p) => (p ? { ...p, links: all } : p)), []);
   const editable = Boolean(model?.settings?.editable);
@@ -458,7 +480,7 @@ export default function App() {
                   {view === "fan" ? <FanView model={model} rootId={rootId} onSelect={onSelect} onHover={setHover} onLeave={() => setHover(null)} exportRef={exportRef} /> : null}
                   {view === "timeline" ? <TimelineView model={model} rootId={rootId} onSelect={onSelect} onHover={setHover} onLeave={() => setHover(null)} exportRef={exportRef} /> : null}
                   {view === "sources" ? <SourcesView model={model} onOpen={openPerson} editable={editable && editing} onEdit={editTree} /> : null}
-                  {view === "hints" ? <HintsView model={model} hints={hints} loading={hintsLoading} onState={hintState} onOpen={openPerson} onHoverLink={setLinkHover} onLeaveLink={() => setLinkHover(null)} onRefresh={loadHints} onToast={setToast} /> : null}
+                  {view === "hints" ? <HintsView model={model} hints={hints} total={hintsMeta.total} scope={hintsScope} onScope={setHintsScope} loading={hintsLoading} onState={hintState} onOpen={openPerson} onHoverLink={setLinkHover} onLeaveLink={() => setLinkHover(null)} onRefresh={() => loadHints((hintsScope === "all" || (selected && model.generations[selected] === undefined)) ? "all" : "ancestors")} onToast={setToast} /> : null}
                   {view === "history" ? <HistoryView model={model} items={history} loading={historyLoading} onOpen={openPerson} onToast={setToast} /> : null}
                 </Suspense>
               )}

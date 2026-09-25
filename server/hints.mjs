@@ -169,9 +169,30 @@ const RULES = [
   },
 ];
 
+/** A recorded year is exact. An estimate widens the window and must not look like a fact in a URL. */
+function yearSpan(y) {
+  if (y && typeof y === "object") return { year: Number.isFinite(y.year) ? y.year : null, est: !!y.est };
+  if (typeof y === "number" && Number.isFinite(y)) return { year: y, est: false };
+  return { year: null, est: false };
+}
+
+function pinRank(h) {
+  if (h.state !== "pinned") return 0;
+  return h.wall?.nextRecord ? 2 : 1;
+}
+
+/** Pinned walls with a next record come first, then other pinned hints, then priority. */
+export function compareHints(a, b) {
+  return pinRank(b) - pinRank(a) || b.priority - a.priority || String(a.title).localeCompare(String(b.title));
+}
+
 function fsSearch(n, y, place) {
+  const { year, est } = yearSpan(y);
   const q = [`q.givenName=${enc(n.first)}`, `q.surname=${enc(n.surname)}`];
-  if (y) { q.push(`q.birthLikeDate.from=${y - 3}`, `q.birthLikeDate.to=${y + 3}`); }
+  if (year) {
+    const pad = est ? 10 : 3;
+    q.push(`q.birthLikeDate.from=${year - pad}`, `q.birthLikeDate.to=${year + pad}`);
+  }
   if (place) q.push(`q.anyPlace=${enc(place)}`);
   return { label: "FamilySearch records", url: `https://www.familysearch.org/search/record/results?${q.join("&")}` };
 }
@@ -179,18 +200,21 @@ function fsCatalog(place) {
   return { label: `FamilySearch catalog: ${place}`, url: `https://www.familysearch.org/search/catalog/results?query=%2Bplace%3A%22${enc(place)}%22` };
 }
 function ancestry(n, y, place) {
+  const { year, est } = yearSpan(y);
   const parts = [`name=${enc(n.first)}_${enc(n.surname)}`];
-  if (y) parts.push(`birth=${y}${place ? `_${enc(place)}` : ""}`);
+  if (year && !est) parts.push(`birth=${year}${place ? `_${enc(place)}` : ""}`);
   return { label: "Ancestry search", url: `https://www.ancestry.com/search/?${parts.join("&")}` };
 }
 function findagrave(n, y) {
+  const { year, est } = yearSpan(y);
   const q = [`firstname=${enc(n.first)}`, `lastname=${enc(n.surname)}`];
-  if (y) q.push(`birthyear=${y}`, "birthyearfilter=5");
+  if (year) q.push(`birthyear=${year}`, `birthyearfilter=${est ? 10 : 5}`);
   return { label: "Find a Grave", url: `https://www.findagrave.com/memorial/search?${q.join("&")}` };
 }
 function chronam(n, y, state) {
+  const { year } = yearSpan(y);
   const q = [`andtext=${enc(`${n.first} ${n.surname}`.trim())}`, "dateFilterType=yearRange"];
-  if (y) q.push(`date1=${Math.max(1770, y - 5)}`, `date2=${Math.min(1963, y + 90)}`);
+  if (year) q.push(`date1=${Math.max(1770, year - 5)}`, `date2=${Math.min(1963, year + 90)}`);
   if (state) q.push(`state=${enc(state)}`);
   return { label: "Chronicling America", url: `https://chroniclingamerica.loc.gov/search/pages/results/?${q.join("&")}` };
 }
@@ -309,22 +333,24 @@ export function allCensusChecklists(model) {
 }
 
 export function recordSuggestions(placeStr, year, n) {
+  const span = yearSpan(year);
+  const y = span.year;
   const p = norm(placeStr);
-  const hits = RULES.filter((r) => r.test(p, year));
+  const hits = RULES.filter((r) => r.test(p, y));
   if (!hits.length) {
     return {
       records: ["Civil or church vital records for the place of the event", "Census / population registers inside the lifespan", "Cemetery and obituary records"],
-      links: [fsSearch(n, year, placeStr || ""), ancestry(n, year, placeStr || ""), findagrave(n, year)],
+      links: [fsSearch(n, span, placeStr || ""), ancestry(n, span, placeStr || ""), findagrave(n, span)],
       rule: "generic",
     };
   }
   const records = uniq(hits.flatMap((h) => h.records)).slice(0, 7);
   const links = [];
   const seen = new Set();
-  for (const h of hits) for (const l of h.links(n, year)) if (!seen.has(l.url)) { seen.add(l.url); links.push(l); }
-  // Census decades inside lifespan for US places
-  if (/usa|united states|florida|connecticut|new york|indiana/.test(p) && year) {
-    const decades = federalCensusYearsInSpan(year - 2, year + 95);
+  for (const h of hits) for (const l of h.links(n, span)) if (!seen.has(l.url)) { seen.add(l.url); links.push(l); }
+  // Census decades inside lifespan for US places. The census years themselves are real.
+  if (/usa|united states|florida|connecticut|new york|indiana/.test(p) && y) {
+    const decades = federalCensusYearsInSpan(y - 2, y + 95);
     if (decades.length) records.push(`Census years to check: ${decades.join(", ")}`);
   }
   return { records, links, rule: hits[0].id };
@@ -414,7 +440,7 @@ export function computeHints(model, opts = {}) {
     const realParents = p.parentFamilies.flatMap((fid) => [model.families[fid]?.father, model.families[fid]?.mother]).filter((x) => x && !isPlaceholder(model.people[x]));
     const placeholderParents = p.parentFamilies.flatMap((fid) => [model.families[fid]?.father, model.families[fid]?.mother]).filter((x) => x && isPlaceholder(model.people[x]));
     if (!realParents.length && gen[p.id] !== undefined && gen[p.id] > 0) {
-      const sug = recordSuggestions(bestPlace, est.year, n);
+      const sug = recordSuggestions(bestPlace, est, n);
       const surnamesKnown = placeholderParents.map((x) => model.people[x].surname).filter(Boolean);
       push({
         type: "brick-wall", personId: p.id, key: "parents", base: 90,
@@ -432,7 +458,7 @@ export function computeHints(model, opts = {}) {
 
     // 2. Missing vitals
     if (!v.birthLike || !v.birthLike.date) {
-      const sug = recordSuggestions(bestPlace, est.year, n);
+      const sug = recordSuggestions(bestPlace, est, n);
       push({
         type: "missing-birth", personId: p.id, key: "birth", base: 55,
         title: `No birth or baptism ${v.birthLike ? "date" : "event"} for ${p.name}`,
@@ -452,7 +478,7 @@ export function computeHints(model, opts = {}) {
     if (!living && !v.deathLike) {
       const dyear = v.birthLike?.date?.year ? v.birthLike.date.year + 65 : est.year ? est.year + 65 : null;
       const lastPlace = [...places].sort((a, b) => (b.year || 0) - (a.year || 0))[0]?.place || bestPlace;
-      const sug = recordSuggestions(lastPlace, dyear, n);
+      const sug = recordSuggestions(lastPlace, { year: dyear, est: true }, n);
       push({
         type: "missing-death", personId: p.id, key: "death", base: 45,
         title: `No death or burial for ${p.name}`,
@@ -467,7 +493,7 @@ export function computeHints(model, opts = {}) {
     if (v.birthLike && !v.birthLike.citations.length) uncited.push(v.birthLike.type.toLowerCase());
     if (v.deathLike && !v.deathLike.citations.length) uncited.push(v.deathLike.type.toLowerCase());
     if (uncited.length) {
-      const sug = recordSuggestions(bestPlace, v.birthLike?.date?.year || est.year, n);
+      const sug = recordSuggestions(bestPlace, v.birthLike?.date?.year ? v.birthLike.date.year : est, n);
       push({
         type: "uncited", personId: p.id, key: uncited.join("+"), base: 30,
         title: `Uncited ${uncited.join(" and ")} for ${p.name}`,
@@ -476,7 +502,7 @@ export function computeHints(model, opts = {}) {
       });
     }
     if (c?.memberOnly) {
-      const sug = recordSuggestions(bestPlace, v.birthLike?.date?.year || est.year, n);
+      const sug = recordSuggestions(bestPlace, v.birthLike?.date?.year ? v.birthLike.date.year : est, n);
       push({
         type: "member-tree-only", personId: p.id, key: "member", base: 32,
         title: `${p.name} rests only on member trees`,
@@ -490,6 +516,9 @@ export function computeHints(model, opts = {}) {
     const dy = v.deathLike?.date?.year;
     if (by && dy && dy < by) {
       push({ type: "conflict", personId: p.id, key: "death<birth", base: 60, title: `Death before birth for ${p.name}`, why: `Death ${v.deathLike.date.text} precedes birth ${v.birthLike.date.text}.`, suggestedRecords: ["Re-check the source images for both dates"], searchLinks: [], suggestionConfidence: "high", rule: "plausibility" });
+    }
+    if (v.death?.date?.sort && v.burial?.date?.sort && v.burial.date.sort < v.death.date.sort) {
+      push({ type: "conflict", personId: p.id, key: "burial<death", base: 55, title: `Burial before death for ${p.name}`, why: `Burial ${v.burial.date.text} precedes death ${v.death.date.text}.`, suggestedRecords: ["Re-check the burial and death dates against the record images"], searchLinks: [], suggestionConfidence: "high", rule: "plausibility" });
     }
     if (by && dy && dy - by > 110) {
       push({ type: "conflict", personId: p.id, key: "lifespan", base: 50, title: `Lifespan of ${dy - by} years for ${p.name}`, why: `Born ${by}, died ${dy}. One date is probably wrong or belongs to another person.`, suggestedRecords: ["Compare with a burial record or obituary age"], searchLinks: [], suggestionConfidence: "high", rule: "plausibility" });
@@ -536,7 +565,7 @@ export function computeHints(model, opts = {}) {
         const spouse = f.mother ? model.people[f.mother]?.name : "unknown spouse";
         const firstChild = f.children.map((ch) => vitals(model, ch.id).birthLike?.date?.year).filter(Boolean).sort()[0];
         const myear = firstChild ? firstChild - 2 : by ? by + 25 : est.year ? est.year + 25 : null;
-        const sug = recordSuggestions(bestPlace, myear, n);
+        const sug = recordSuggestions(bestPlace, { year: myear, est: true }, n);
         push({
           type: "missing-marriage", personId: p.id, key: `marriage:${fid}`, base: 38,
           title: `No marriage record for ${p.name} × ${spouse}`,
@@ -553,7 +582,8 @@ export function computeHints(model, opts = {}) {
     if (!f.children.length) continue;
     const m = model.people[f.mother];
     if (!m) continue;
-    push({ type: "missing-spouse", personId: f.mother, key: `spouse:${f.id}`, base: 42, title: `Father of ${m.name}'s child${f.children.length > 1 ? "ren" : ""} not recorded`, why: `Family ${f.id} has ${f.children.length} child${f.children.length > 1 ? "ren" : ""} and no father.`, suggestedRecords: ["Children's baptism / birth records name the father", "Marriage record of the mother"], searchLinks: recordSuggestions(personPlaces(model, f.mother)[0]?.place || "", estimateBirthYear(model, f.mother).year, nameOf(f.mother)).links, suggestionConfidence: "medium", rule: "family", familyId: f.id });
+    const motherEst = estimateBirthYear(model, f.mother);
+    push({ type: "missing-spouse", personId: f.mother, key: `spouse:${f.id}`, base: 42, title: `Father of ${m.name}'s child${f.children.length > 1 ? "ren" : ""} not recorded`, why: `Family ${f.id} has ${f.children.length} child${f.children.length > 1 ? "ren" : ""} and no father.`, suggestedRecords: ["Children's baptism / birth records name the father", "Marriage record of the mother"], searchLinks: recordSuggestions(personPlaces(model, f.mother)[0]?.place || "", motherEst, nameOf(f.mother)).links, suggestionConfidence: "medium", rule: "family", familyId: f.id });
   }
 
   // 5. Possible duplicates (accent / particle / apellido-order aliases share a key)
@@ -588,6 +618,6 @@ export function computeHints(model, opts = {}) {
     h.stateAt = s?.at || null;
     if (h.state === "pinned") h.priority += 100;
   }
-  hints.sort((a, b) => b.priority - a.priority || a.title.localeCompare(b.title));
+  hints.sort(compareHints);
   return hints;
 }

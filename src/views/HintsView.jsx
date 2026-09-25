@@ -3,9 +3,8 @@ import HintCard, { HINT_LABEL } from "../components/HintCard.jsx";
 import { HINT_COLORS } from "../lib/color.js";
 import { api } from "../lib/api.js";
 
-export default function HintsView({ model, hints, loading, onState, onOpen, onHoverLink, onLeaveLink, onRefresh, onToast }) {
+export default function HintsView({ model, hints, total, scope, onScope, loading, onState, onOpen, onHoverLink, onLeaveLink, onRefresh, onToast }) {
   const [types, setTypes] = useState(() => new Set(Object.keys(HINT_LABEL)));
-  const [scope, setScope] = useState("ancestors"); // ancestors | all
   const [status, setStatus] = useState("open"); // open | pinned | done | dismissed | all
   const [q, setQ] = useState("");
   const [limit, setLimit] = useState(60);
@@ -63,10 +62,10 @@ export default function HintsView({ model, hints, loading, onState, onOpen, onHo
   return (
     <div className="page">
       <div className="page-head">
-        <h2>Research hints <span className="muted small">{loading ? "computing…" : `${list.length} shown · ${(hints || []).length} total`}</span></h2>
+        <h2>Research hints <span className="muted small">{loading ? "computing…" : `${list.length} shown · ${(hints || []).length} loaded · ${Number.isFinite(total) ? total : (hints || []).length} total`}</span></h2>
         <div className="row">
           <input placeholder="Filter by person or title" value={q} onChange={(e) => setQ(e.target.value)} />
-          <select value={scope} onChange={(e) => setScope(e.target.value)}>
+          <select value={scope} onChange={(e) => onScope(e.target.value)}>
             <option value="ancestors">direct ancestors of home</option>
             <option value="all">everyone</option>
           </select>

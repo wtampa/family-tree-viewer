@@ -1,30 +1,78 @@
 /**
  * Per-person evidence confidence (0–100).
  * weight(citation) = (grampsConfidence / 4) × sourceClass
- * sourceClass: member tree 0.3 · index/abstract 0.7 · primary or imaged 1.0
+ * sourceClass: member tree 0.3 · index/abstract 0.7 · unknown 0.4 · primary or imaged 1.0
+ * An unmatched title is unknown. Primary requires a record-type keyword or an attached image.
  * fact score = 1 − Π(1 − w)   (diminishing returns)
  * person score = weighted mean over facts that apply (birth, parents, death, marriage, identity)
  */
 
 export const SOURCE_CLASS = { MEMBER_TREE: "member-tree", INDEX: "index", PRIMARY: "primary", UNKNOWN: "unknown" };
 
-const CLASS_WEIGHT = { [SOURCE_CLASS.MEMBER_TREE]: 0.3, [SOURCE_CLASS.INDEX]: 0.7, [SOURCE_CLASS.PRIMARY]: 1.0, [SOURCE_CLASS.UNKNOWN]: 0.6 };
+const CLASS_WEIGHT = { [SOURCE_CLASS.MEMBER_TREE]: 0.3, [SOURCE_CLASS.INDEX]: 0.7, [SOURCE_CLASS.PRIMARY]: 1.0, [SOURCE_CLASS.UNKNOWN]: 0.4 };
 
-export function classifySource(src) {
-  if (!src) return SOURCE_CLASS.UNKNOWN;
-  const t = `${src.title} ${src.pubinfo} ${src.author}`.toLowerCase();
+const PRIMARY_RE = /\b(certificates?|registers?|registros?|actas?|partidas?|parish|baptisms?|bautismos?|censuses?|census|censos?|manifests?|passengers?|obituaries|obituary|wills?|probates?|deeds?|licen[cs]es?|directories|directory|tombstones?|gravestones?|headstones?)\b|find a grave photo/i;
+
+function hasAttachedMedia(obj) {
+  return Array.isArray(obj?.media) && obj.media.length > 0;
+}
+
+export function classifySource(src, opts = {}) {
+  const imaged = Boolean(opts.hasMedia) || hasAttachedMedia(src);
+  const t = src ? `${src.title || ""} ${src.pubinfo || ""} ${src.author || ""}`.toLowerCase() : "";
   if (/family tree|member tree|public member|one world tree|geni|wikitree|myheritage tree|familysearch family tree/.test(t)) return SOURCE_CLASS.MEMBER_TREE;
   if (/\bindex\b|indexes|abstract|transcription|extract|compiled|public records/.test(t)) return SOURCE_CLASS.INDEX;
-  return SOURCE_CLASS.PRIMARY;
+  if (PRIMARY_RE.test(t)) return SOURCE_CLASS.PRIMARY;
+  if (imaged) return SOURCE_CLASS.PRIMARY;
+  return SOURCE_CLASS.UNKNOWN;
 }
 
 export function citationWeight(model, cid) {
   const c = model.citations[cid];
   if (!c) return 0;
   const src = c.source ? model.sources[c.source] : null;
-  const cls = classifySource(src);
+  const cls = classifySource(src, { hasMedia: hasAttachedMedia(c) || hasAttachedMedia(src) });
   const conf = Math.max(0, Math.min(4, Number.isFinite(c.confidence) ? c.confidence : 2));
   return { w: (conf / 4) * CLASS_WEIGHT[cls], cls, conf, sourceId: c.source, sourceTitle: src?.title || "(no source)" };
+}
+
+const FACT_SUBJECT = { birth: "Birth", parents: "Parents", death: "Death", marriage: "Marriage" };
+const CLASS_RANK = { [SOURCE_CLASS.PRIMARY]: 4, [SOURCE_CLASS.INDEX]: 3, [SOURCE_CLASS.UNKNOWN]: 2, [SOURCE_CLASS.MEMBER_TREE]: 1 };
+const CLASS_PHRASE = {
+  [SOURCE_CLASS.PRIMARY]: "a primary record",
+  [SOURCE_CLASS.INDEX]: "an index only",
+  [SOURCE_CLASS.UNKNOWN]: "an unknown source",
+  [SOURCE_CLASS.MEMBER_TREE]: "a member tree only",
+};
+
+function bestClass(parts) {
+  let best = null;
+  for (const part of parts || []) {
+    if (!best || (CLASS_RANK[part.cls] || 0) > (CLASS_RANK[best] || 0)) best = part.cls;
+  }
+  return best;
+}
+
+function factClause(f) {
+  const subject = FACT_SUBJECT[f.key];
+  if (!subject) return null;
+  if (!f.has) return f.key === "parents" ? "Parents are not linked" : `${subject} is not recorded`;
+  const best = bestClass(f.parts);
+  if (!best) return f.key === "parents" ? "Parents have no citation" : `${subject} has no citation`;
+  const phrase = CLASS_PHRASE[best];
+  if (f.key === "parents") return `Parents rest on ${phrase}`;
+  return `${subject} is ${phrase}`;
+}
+
+/** One sentence a researcher can act on. Identity is omitted so the line stays about the claims. */
+export function evidenceSummary(facts) {
+  const clauses = [];
+  for (const f of facts || []) {
+    const clause = factClause(f);
+    if (clause) clauses.push(clause);
+  }
+  if (!clauses.length) return "";
+  return `${clauses.map((c, i) => (i === 0 ? c : `${c.charAt(0).toLowerCase()}${c.slice(1)}`)).join("; ")}.`;
 }
 
 function factScore(model, cids) {
@@ -135,11 +183,13 @@ export function computeConfidence(model) {
     for (const cid of allCids) classes[citationWeight(model, cid).cls]++;
     const total = allCids.size;
     const memberOnly = total > 0 && classes[SOURCE_CLASS.MEMBER_TREE] === total;
+    const factRows = facts.map((f) => ({ key: f.key, label: f.label, has: f.has, score: Math.round((f.has ? f.score : 0) * 100), parts: f.parts }));
 
     out[p.id] = {
       score: Math.round(score * 100),
       living,
-      facts: facts.map((f) => ({ key: f.key, label: f.label, has: f.has, score: Math.round((f.has ? f.score : 0) * 100), parts: f.parts })),
+      facts: factRows,
+      summary: evidenceSummary(factRows),
       citations: total,
       classes,
       memberOnly,

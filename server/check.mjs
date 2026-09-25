@@ -10,6 +10,10 @@ import { selftestNames } from "./names-selftest.mjs";
 import { selftestHintExport } from "./hint-export-selftest.mjs";
 import { selftestStore } from "./store-selftest.mjs";
 import { selftestShareExport } from "./share-export-selftest.mjs";
+import { selftestConfidence } from "./confidence-selftest.mjs";
+import { selftestHintLinks } from "./hints-link-selftest.mjs";
+import { selftestGedcom } from "./gedcom-selftest.mjs";
+import { selftestChartData } from "./chart-data-selftest.mjs";
 import { surnameCores, visibleAliases } from "../src/lib/names.js";
 import { allEntries, entryById, resolveTreePath, treeFileExists, loadTreeFile, pickHomeId, hasPersonalTree, personalEntry } from "./trees.mjs";
 
@@ -169,6 +173,34 @@ try {
   console.log("share-export selftest", r.tests, "ok");
 } catch (e) {
   console.error("FAIL share-export selftest", e.message);
+  process.exit(1);
+}
+try {
+  const r = selftestConfidence();
+  console.log("confidence selftest", r.tests, "ok");
+} catch (e) {
+  console.error("FAIL confidence selftest", e.message);
+  process.exit(1);
+}
+try {
+  const r = selftestHintLinks();
+  console.log("hint-link selftest", r.tests, "ok");
+} catch (e) {
+  console.error("FAIL hint-link selftest", e.message);
+  process.exit(1);
+}
+try {
+  const r = selftestGedcom();
+  console.log("gedcom selftest", r.tests, "ok");
+} catch (e) {
+  console.error("FAIL gedcom selftest", e.message);
+  process.exit(1);
+}
+try {
+  const r = selftestChartData();
+  console.log("chart-data selftest", r.tests, "ok");
+} catch (e) {
+  console.error("FAIL chart-data selftest", e.message);
   process.exit(1);
 }
 

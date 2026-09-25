@@ -158,8 +158,9 @@ export default function PersonDrawer({ model, pid, hints, links, onLinksChange, 
           <div className={`kin ${kinHome.collapse ? "kin-collapse" : ""}`}>{kin}{kinHome.collapse ? " ◇" : ""}{kinHome.paths.length > 1 ? <span className="muted"> · {kinHome.paths.length} paths</span> : null}</div>
           <div className="conf-line">
             <span className="conf-num" style={{ color: confidenceColor(c.score) }}>{c.score}</span>
-            <span className="muted">/100 evidence · {c.citations} citation{c.citations === 1 ? "" : "s"}{c.memberOnly ? " · member trees only" : ""}{c.living ? " · likely living" : ""}</span>
+            <span className="muted">/100 evidence · {c.citations} citation{c.citations === 1 ? "" : "s"}{c.memberOnly ? " · member trees only" : ""}{c.classes?.unknown > 0 ? ` · ${c.classes.unknown} unknown source${c.classes.unknown === 1 ? "" : "s"}` : ""}{c.living ? " · likely living" : ""}</span>
           </div>
+          {c.summary ? <div className="conf-summary muted small">{c.summary}</div> : null}
         </div>
       </div>
       <div className="drawer-actions">

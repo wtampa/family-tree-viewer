@@ -1,7 +1,7 @@
 # Family Tree Viewer — speed fixes (do this chat)
 
 Point a new chat at this file: `docs/dev/SPEED.md`  
-Also read `AGENTS.md` (local only) and `NEXT.md`.
+Also read `AGENTS.md` (local, gitignored) — public summary in [CONTRIBUTING.md](../../CONTRIBUTING.md) — and `NEXT.md`.
 
 This is the **implementation** brief. A prior review measured the bottlenecks ([speed review](e770b56f-6756-42b0-be4d-6cedc13acb7f)); a second pass agreed with the numbers and **reordered** the work. Follow **this** order, not the canvas / old trace.
 

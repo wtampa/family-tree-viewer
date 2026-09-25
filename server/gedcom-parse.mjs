@@ -1,6 +1,6 @@
 /**
- * GEDCOM 5.5 → same normalized model as gramps-parse.mjs.
- * Enough for royal92 and typical public sample files. Read-only.
+ * GEDCOM 5.5 / 5.5.1 → same normalized model as gramps-parse.mjs.
+ * Read-only. Keeps CONC/CONT notes, pointer NOTE and OBJE records, QUAY, and UTF-8 / UTF-16 BOMs.
  */
 import fs from "node:fs";
 import { addDerived, emptyModel } from "./gramps-parse.mjs";
@@ -63,6 +63,8 @@ function parseName(raw) {
       suffix: cleanNamePart(m[3]),
     };
   }
+  const parts = cleanNamePart(s).split(" ").filter(Boolean);
+  if (parts.length >= 2) return { first: parts.slice(0, -1).join(" "), surname: parts[parts.length - 1], suffix: "" };
   return { first: cleanNamePart(s), surname: "", suffix: "" };
 }
 
@@ -119,7 +121,6 @@ function eventFrom(node, type, id) {
   const dateN = kid(node, "DATE");
   const placN = kid(node, "PLAC");
   const noteN = kid(node, "NOTE");
-  const sour = kids(node, "SOUR").map((s) => ptr(s.value)).filter(Boolean);
   return {
     id,
     handle: id,
@@ -130,7 +131,7 @@ function eventFrom(node, type, id) {
     place: placN ? placN.value.trim() : null, // resolved to place id later
     placeText: placN ? placN.value.trim() : "",
     description: type === "Occupation" || type === "Residence" || type === "Event" ? (node.value || "") : "",
-    citations: sour,
+    citations: [],
     notes: noteN ? [noteN.value] : [],
     media: [],
     attributes: [],
@@ -139,7 +140,7 @@ function eventFrom(node, type, id) {
 }
 
 export function parseGedcom(text, meta = {}) {
-  const records = parseLines(text);
+  const records = parseLines(String(text || "").replace(/^\uFEFF/, ""));
   const model = emptyModel({
     file: meta.file || "",
     mtime: meta.mtime || 0,
@@ -198,14 +199,67 @@ export function parseGedcom(text, meta = {}) {
   };
 
   let cSeq = 0;
-  const addCite = (sourId, page) => {
+  const noteTextById = new Map();
+  const objeById = new Map();
+  for (const rec of records) {
+    if (rec.xref && rec.tag === "NOTE") noteTextById.set(rec.xref, rec.value || "");
+    if (rec.xref && rec.tag === "OBJE") objeById.set(rec.xref, rec);
+  }
+  const quayOf = (node) => {
+    const raw = kid(node, "QUAY")?.value;
+    if (raw == null || String(raw).trim() === "") return 2;
+    const n = Number(String(raw).trim());
+    if (!Number.isFinite(n)) return 2;
+    return Math.max(0, Math.min(3, Math.round(n)));
+  };
+  const sourcePointer = (node) => ptr(node.value) || String(node.value || "").replace(/@/g, "") || null;
+  const noteBody = (node) => {
+    if (!node) return "";
+    const id = ptr(node.value);
+    if (id) return noteTextById.get(id) || "";
+    return node.value || "";
+  };
+  const objeNode = (node) => {
+    if (!node) return null;
+    const id = ptr(node.value);
+    if (id) return objeById.get(id) || null;
+    return node;
+  };
+  const mediaInfo = (node) => {
+    const fileNode = kid(node, "FILE");
+    const file = fileNode?.value || "";
+    const form = kid(fileNode, "FORM")?.value || kid(node, "FORM")?.value || "";
+    const title = kid(node, "TITL")?.value || kid(fileNode, "TITL")?.value || "";
+    return { file, form, title };
+  };
+  const isImage = (file, form) => /\.(png|jpe?g|gif|webp)\b/i.test(file) || /^(png|jpe?g|gif|webp)$/i.test(String(form || "").trim());
+  const pushMedia = (media, ownerId, display, info) => {
+    if (!info?.file || !isImage(info.file, info.form)) return;
+    const mid = `M_${ownerId}_${media.length}`;
+    model.media[mid] = {
+      id: mid, handle: mid, change: 0, priv: false,
+      src: info.file, mime: info.form || "", description: info.title || display, checksum: "",
+      date: null, citations: [], notes: [], attributes: [], tags: [],
+    };
+    media.push({ id: mid });
+  };
+  const addCite = (sourId, page, confidence = 2) => {
     if (!sourId) return null;
     const id = `C${String(++cSeq).padStart(4, "0")}`;
+    const conf = Number.isFinite(confidence) ? confidence : 2;
     model.citations[id] = {
       id, handle: id, change: 0, priv: false,
-      page: page || "", confidence: 2, date: null, source: sourId, notes: [], media: [], attributes: [],
+      page: page || "", confidence: conf, date: null, source: sourId, notes: [], media: [], attributes: [],
     };
     return id;
+  };
+  const takeEventCites = (eventNode, eid, citations) => {
+    for (const s of kids(eventNode, "SOUR")) {
+      const cid = addCite(sourcePointer(s), kid(s, "PAGE")?.value || "", quayOf(s));
+      if (!cid) continue;
+      citations.push(cid);
+      model.events[eid].citations.push(cid);
+    }
   };
 
   for (const rec of records) {
@@ -238,33 +292,19 @@ export function parseGedcom(text, meta = {}) {
       if (EVENT_TYPES[k.tag] || k.tag === "EVEN") {
         const eid = addEvent(k, k.tag);
         events.push({ id: eid, role: "Primary" });
-        for (const s of kids(k, "SOUR")) {
-          const cid = addCite(ptr(s.value) || s.value.replace(/@/g, ""), kid(s, "PAGE")?.value || "");
-          if (cid) {
-            citations.push(cid);
-            model.events[eid].citations.push(cid);
-          }
-        }
+        takeEventCites(k, eid, citations);
       }
       if (k.tag === "NOTE") {
-        const nid = addNote(ptr(k.value) ? "" : k.value);
+        const nid = addNote(noteBody(k));
         if (nid) notes.push(nid);
       }
       if (k.tag === "SOUR") {
-        const cid = addCite(ptr(k.value), kid(k, "PAGE")?.value || "");
+        const cid = addCite(sourcePointer(k), kid(k, "PAGE")?.value || "", quayOf(k));
         if (cid) citations.push(cid);
       }
-      if (k.tag === "OBJE" && !ptr(k.value)) {
-        const file = kid(k, "FILE")?.value || "";
-        if (/\.(png|jpe?g|gif|webp)$/i.test(file)) {
-          const mid = `M_${id}_${media.length}`;
-          model.media[mid] = {
-            id: mid, handle: mid, change: 0, priv: false,
-            src: file, mime: "", description: display, checksum: "",
-            date: null, citations: [], notes: [], attributes: [], tags: [],
-          };
-          media.push({ id: mid });
-        }
+      if (k.tag === "OBJE") {
+        const node = objeNode(k);
+        if (node) pushMedia(media, id, display, mediaInfo(node));
       }
     }
     const famc = kids(rec, "FAMC").map((x) => ptr(x.value)).filter(Boolean);
@@ -305,13 +345,14 @@ export function parseGedcom(text, meta = {}) {
       if (EVENT_TYPES[k.tag] || k.tag === "EVEN") {
         const eid = addEvent(k, k.tag);
         events.push({ id: eid, role: "Family" });
+        takeEventCites(k, eid, citations);
       }
       if (k.tag === "NOTE") {
-        const nid = addNote(ptr(k.value) ? "" : k.value);
+        const nid = addNote(noteBody(k));
         if (nid) notes.push(nid);
       }
       if (k.tag === "SOUR") {
-        const cid = addCite(ptr(k.value), kid(k, "PAGE")?.value || "");
+        const cid = addCite(sourcePointer(k), kid(k, "PAGE")?.value || "", quayOf(k));
         if (cid) citations.push(cid);
       }
     }
@@ -335,8 +376,44 @@ export function parseGedcom(text, meta = {}) {
   return model;
 }
 
+function utf8Ok(buf) {
+  try {
+    new TextDecoder("utf-8", { fatal: true }).decode(buf);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function legacyHeadChar(buf) {
+  const head = buf.subarray(0, Math.min(buf.length, 2000)).toString("latin1");
+  return /(?:^|\n)1 CHAR (ANSEL|ANSI)\b/i.test(head);
+}
+
+/** UTF-8 (with or without BOM), UTF-16 LE/BE BOM, or latin1 when HEAD says ANSEL/ANSI and the bytes are not UTF-8. */
+export function decodeGedcom(buf) {
+  const input = Buffer.isBuffer(buf) ? buf : Buffer.from(buf);
+  if (input.length >= 2 && input[0] === 0xff && input[1] === 0xfe) {
+    return input.subarray(2).toString("utf16le").replace(/^\uFEFF/, "");
+  }
+  if (input.length >= 2 && input[0] === 0xfe && input[1] === 0xff) {
+    const body = input.subarray(2);
+    const n = body.length - (body.length % 2);
+    const swapped = Buffer.alloc(n);
+    for (let i = 0; i < n; i += 2) {
+      swapped[i] = body[i + 1];
+      swapped[i + 1] = body[i];
+    }
+    return swapped.toString("utf16le").replace(/^\uFEFF/, "");
+  }
+  const start = input.length >= 3 && input[0] === 0xef && input[1] === 0xbb && input[2] === 0xbf ? 3 : 0;
+  const slice = input.subarray(start);
+  if (!utf8Ok(slice) && legacyHeadChar(slice)) return slice.toString("latin1").replace(/^\uFEFF/, "");
+  return slice.toString("utf8").replace(/^\uFEFF/, "");
+}
+
 export function loadGedcom(file) {
   const st = fs.statSync(file);
-  const text = fs.readFileSync(file, "utf8");
+  const text = decodeGedcom(fs.readFileSync(file));
   return parseGedcom(text, { file, mtime: st.mtimeMs });
 }

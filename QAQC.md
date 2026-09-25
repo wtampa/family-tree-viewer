@@ -4,7 +4,7 @@ Hand this file to **another model** (or a later chat) and say: **run the publish
 
 Scope: this repository only. Do **not** open the research library as a workspace root. Do **not** edit `data.gramps`. Do **not** invent given names. Do **not** write living or deceased personal names, emails, or Gramps IDs from a private tree into any **tracked** file (including this one).
 
-Product rule: localhost overlay, MIT, no public/cloud upload, no `0.0.0.0`. Closest docs: [README.md](README.md), [NEXT.md](NEXT.md), [AGENTS.md](AGENTS.md).
+Product rule: localhost overlay, MIT, no public/cloud upload, no `0.0.0.0`. Closest docs: [README.md](README.md), [NEXT.md](NEXT.md), [CONTRIBUTING.md](CONTRIBUTING.md). `AGENTS.md` is local and gitignored.
 
 ---
 
@@ -66,10 +66,10 @@ Confirm these are **ignored** (FAIL if any would be added):
 | `notes/` | Local work logs; may name people |
 | `.cache/` | Logs, OG cache |
 | `node_modules/`, `dist/`, `*.log` | Build junk |
-| `sample/**/*.gramps`, other `sample/**/*.ged`, `sample/**/media/` | Fetched binaries; queen is large. The three fan GEDCOMs are tracked on purpose |
+| `sample/**/*.gramps`, other `sample/**/*.ged`, `sample/**/media/` | Fetched binaries; queen is large. The three fan GEDCOMs and `sample/fixtures/*.ged` are tracked on purpose |
 | Any path under the research library (`data/data.gramps`, portraits, `00_Data_In`) | Private tree |
 
-Confirm these **are** committable: `src/`, `server/`, `server.mjs`, `package.json`, `package-lock.json`, `LICENSE`, `README.md`, `QAQC.md`, `sample/catalog.json`, `sample/README.md`, `sample/queen/LICENSE`, `sample/queen/UPSTREAM.md`, `settings.example.json` (no real path required), `sample/simpsons/Simpsons.ged`, `sample/ducktales/DuckTales.ged`, `sample/harry-potter/HarryPotter.ged`.
+Confirm these **are** committable: `src/`, `server/`, `server.mjs`, `package.json`, `package-lock.json`, `LICENSE`, `README.md`, `QAQC.md`, `CONTRIBUTING.md`, `start.sh`, `sample/catalog.json`, `sample/README.md`, `sample/queen/LICENSE`, `sample/queen/UPSTREAM.md`, `settings.example.json` (no real path required), `sample/simpsons/Simpsons.ged`, `sample/ducktales/DuckTales.ged`, `sample/harry-potter/HarryPotter.ged`, `sample/fixtures/ancestry-style.ged`, `sample/fixtures/ancestry-style-utf16.ged`.
 
 ```bash
 git check-ignore -v settings.json notes/INDEX.md sample/queen/queen.gramps
@@ -203,7 +203,7 @@ Optional click-check (do this if you changed UI): `Open Family Tree.bat` or `npm
 | `README.md` | Yes | Stranger can run it; localhost warning; no private names |
 | `QAQC.md` | Yes | This file must not contain a private wordlist |
 | `NEXT.md` | Yes | Backlog only; no “verify on *relative X*” |
-| `AGENTS.md` | Optional | Local Cursor rules (paths, hung-chat IDs). **WARN** if you do not want machine layout on GitHub — then gitignore it. Not a FAIL if it has no person names |
+| `AGENTS.md` | Optional | Local Cursor rules (paths, hung-chat IDs). Gitignored. Public summary: [CONTRIBUTING.md](CONTRIBUTING.md). **WARN** if machine layout is committed. Not a FAIL if it has no person names |
 | `notes/` | No | Must stay ignored |
 | Work hive / `board.json` | No | Outside this repo. Do not copy into `notes/` or the GitHub tree |
 

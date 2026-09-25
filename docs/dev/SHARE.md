@@ -138,7 +138,7 @@ One short subsection in [docs/USERGUIDE.md](../USERGUIDE.md): **Share view** —
 
 ## Verify (slice 1)
 
-Prefer code-only. This repo’s Cursor browser calls hang (`AGENTS.md`).
+Prefer code-only. This repo’s Cursor browser calls hang (`AGENTS.md`, local, gitignored — public summary in [CONTRIBUTING.md](../../CONTRIBUTING.md)).
 
 1. `npm run check` (selftest + default tree).
 2. Restart `Open Family Tree.bat` (so `/api/export-share` is live).

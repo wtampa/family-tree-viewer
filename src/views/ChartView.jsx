@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as f3 from "family-chart";
 import "family-chart/styles/family-chart.css";
+import { pedigreeData } from "../lib/chart-data.js";
 import { confidenceColor } from "../lib/color.js";
 import { initials } from "../lib/format.js";
 
@@ -60,59 +61,68 @@ export default function ChartView({ model, mode, rootId, onSelect, onHover, onLe
   const chartRef = useRef(null);
   const collapsedRef = useRef(null);
   const [ready, setReady] = useState(false);
+  const [chartError, setChartError] = useState("");
 
-  const collapsed = useMemo(() => model.collapsedAncestors(rootId, Math.max(12, settings.ancestry || 0)), [model, rootId, settings.ancestry]);
+  const ancestry = mode === "descendants" ? 0 : Math.max(0, Math.min(12, Number(settings.ancestry) || 0));
+  const progeny = mode === "pedigree" ? 0 : Math.max(0, Math.min(10, Number(settings.progeny) || 0));
+  const showSiblings = Boolean(settings.siblings && ancestry > 0);
+
+  const collapsed = useMemo(() => model.collapsedAncestors(rootId, Math.max(ancestry, 1)), [model, rootId, ancestry]);
   collapsedRef.current = collapsed;
 
-  const data = useMemo(() => {
-    const raw = model.toF3();
-    // f3 supports at most two parents per person; keep the first parent family.
-    for (const d of raw) d.rels.parents = d.rels.parents.slice(0, 2);
-    return raw;
-  }, [model]);
-
-  const ancestry = mode === "descendants" ? 0 : settings.ancestry;
-  const progeny = mode === "pedigree" ? 0 : settings.progeny;
-  const showSiblings = Boolean(settings.siblings && ancestry > 0);
+  const data = useMemo(
+    () => pedigreeData(model, { rootId, ancestry, progeny, siblings: showSiblings }),
+    [model, rootId, ancestry, progeny, showSiblings],
+  );
 
   // create chart once per dataset
   useEffect(() => {
     const cont = contRef.current;
     if (!cont) return;
     cont.innerHTML = "";
-    const chart = f3
-      .createChart(cont, data)
-      .setTransitionTime(650)
-      .setCardXSpacing(settings.compact ? 210 : 260)
-      .setCardYSpacing(settings.compact ? 130 : 170)
-      .setSingleParentEmptyCard(false)
-      .setShowSiblingsOfMain(showSiblings)
-      .setAncestryDepth(ancestry)
-      .setProgenyDepth(progeny);
-    if (settings.horizontal) chart.setOrientationHorizontal(); else chart.setOrientationVertical();
+    if (!data.length) {
+      setChartError("This person is not in the tree.");
+      return;
+    }
+    try {
+      const chart = f3
+        .createChart(cont, data)
+        .setTransitionTime(650)
+        .setCardXSpacing(settings.compact ? 210 : 260)
+        .setCardYSpacing(settings.compact ? 130 : 170)
+        .setSingleParentEmptyCard(false)
+        .setShowSiblingsOfMain(showSiblings)
+        .setAncestryDepth(ancestry)
+        .setProgenyDepth(progeny);
+      if (settings.horizontal) chart.setOrientationHorizontal(); else chart.setOrientationVertical();
 
-    const card = chart
-      .setCardHtml()
-      .setStyle("rect")
-      .setCardInnerHtmlCreator((d) => cardHtml(d, { compact: settings.compact, collapse: collapsedRef.current?.has(d.data.id) }))
-      .setOnHoverPathToMain()
-      .setOnCardClick((e, d) => {
-        const id = d.data.id;
-        if (e.shiftKey || e.ctrlKey || e.metaKey) { onSelect?.(id, { reroot: false }); return; }
-        onSelect?.(id, { reroot: true });
-        chart.updateMainId(id);
-        safeUpdateTree(chart, { tree_position: "main_to_middle" }, { allowSiblings: showSiblings });
-      })
-      .setOnCardUpdate(function (d) {
-        const el = this.querySelector(".card");
-        if (!el) return;
-        el.addEventListener("mouseenter", () => onHover?.(d.data.id));
-        el.addEventListener("mouseleave", () => onLeave?.());
-      });
-    chart.updateMainId(rootId);
-    safeUpdateTree(chart, { initial: true, tree_position: "fit" }, { allowSiblings: showSiblings });
-    chartRef.current = { chart, card, applied: JSON.stringify([ancestry, progeny, showSiblings, rootId]) };
-    setReady(true);
+      const card = chart
+        .setCardHtml()
+        .setStyle("rect")
+        .setCardInnerHtmlCreator((d) => cardHtml(d, { compact: settings.compact, collapse: collapsedRef.current?.has(d.data.id) }))
+        .setOnHoverPathToMain()
+        .setOnCardClick((e, d) => {
+          const id = d.data.id;
+          if (e.shiftKey || e.ctrlKey || e.metaKey) { onSelect?.(id, { reroot: false }); return; }
+          onSelect?.(id, { reroot: true });
+          chart.updateMainId(id);
+          safeUpdateTree(chart, { tree_position: "main_to_middle" }, { allowSiblings: showSiblings });
+        })
+        .setOnCardUpdate(function (d) {
+          const el = this.querySelector(".card");
+          if (!el) return;
+          el.addEventListener("mouseenter", () => onHover?.(d.data.id));
+          el.addEventListener("mouseleave", () => onLeave?.());
+        });
+      chart.updateMainId(rootId);
+      safeUpdateTree(chart, { initial: true, tree_position: "fit" }, { allowSiblings: showSiblings });
+      chartRef.current = { chart, card, applied: JSON.stringify([ancestry, progeny, showSiblings, rootId]) };
+      setChartError("");
+      setReady(true);
+    } catch (e) {
+      chartRef.current = null;
+      setChartError(e?.message || "The chart could not be drawn.");
+    }
     return () => { chartRef.current = null; cont.innerHTML = ""; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, settings.horizontal, settings.compact]);
@@ -147,6 +157,7 @@ export default function ChartView({ model, mode, rootId, onSelect, onHover, onLe
         <button type="button" onClick={() => { const c = chartRef.current?.chart; if (!c) return; c.updateMainId(model.homeId); safeUpdateTree(c, { tree_position: "main_to_middle" }, { allowSiblings: showSiblings }); onSelect?.(model.homeId, { reroot: true }); }}>Home</button>
         <span className="hint-text">Click a card to re-center · scroll to zoom · drag to pan · Shift-click for details · ◇ = pedigree collapse</span>
       </div>
+      {chartError ? <p className="chart-error">{chartError}</p> : null}
       <div className="f3 chart-stage" ref={contRef} />
     </div>
   );

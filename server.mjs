@@ -123,6 +123,31 @@ function abs(p) {
   return path.join(PROJECT_ROOT(), p);
 }
 
+const SIDECAR_NAMES = new Set(["settings.json", "links.json", "hints-state.json", "media-map.json"]);
+const BLOCKED_EXT = new Set([".db", ".db-wal", ".db-shm", ".gramps", ".ged", ".gedcom", ".tmp"]);
+
+function relUnder(root, file) {
+  if (!inside(root, file)) return null;
+  return path.relative(root, file).split(path.sep).join("/").toLowerCase();
+}
+
+/** Local files the UI may open. Tree databases, sidecars, and source GEDCOM/Gramps files are not among them. */
+function servableFile(rel) {
+  const file = abs(rel);
+  if (!file) return { status: 404, error: "not found" };
+  if (!inside(APP_ROOT, file) && !inside(PROJECT_ROOT(), file)) return { status: 403, error: "outside project" };
+  const base = path.basename(file).toLowerCase();
+  if (SIDECAR_NAMES.has(base)) return { status: 403, error: "not servable" };
+  const rels = [relUnder(APP_ROOT, file), relUnder(PROJECT_ROOT(), file)].filter(Boolean);
+  const inExports = rels.some((r) => r === "data/exports" || r.startsWith("data/exports/"));
+  const inData = rels.some((r) => r === "data" || r.startsWith("data/"));
+  if (inData && !inExports) return { status: 403, error: "not servable" };
+  const ext = path.extname(file).toLowerCase();
+  if (!inExports && BLOCKED_EXT.has(ext)) return { status: 403, error: "not servable" };
+  if (!fs.existsSync(file) || !fs.statSync(file).isFile()) return { status: 404, error: "not found", file: rel };
+  return { status: 200, file };
+}
+
 // ---------- model cache ----------
 let cache = { key: "", model: null, confidence: null, media: null, version: 0, error: "" };
 let fileIndex = null;
@@ -343,12 +368,19 @@ function treePayload() {
   };
 }
 
-function hintsPayload() {
+function hintsPayload(scope) {
   const c = loadModel();
   if (!c.model) return { error: c.error || "No model" };
   const s = settings();
-  const hints = publicHints(c, s);
-  return { version: c.version, count: hints.length, hints };
+  const all = publicHints(c, s);
+  const narrowed = scope === "ancestors" ? all.filter((h) => h.isAncestor) : all;
+  return {
+    version: c.version,
+    count: narrowed.length,
+    total: all.length,
+    scope: scope === "ancestors" ? "ancestors" : "all",
+    hints: narrowed,
+  };
 }
 
 let previewMod = null;
@@ -396,7 +428,10 @@ async function handleApi(req, res, url) {
       return send(res, 200, { trees: publicTreeList(), active: settings().treeId });
     }
     if (p === "/api/tree") return send(res, 200, treePayload());
-    if (p === "/api/hints") return send(res, 200, hintsPayload());
+    if (p === "/api/hints") {
+      const scope = url.searchParams.get("scope") === "ancestors" ? "ancestors" : "all";
+      return send(res, 200, hintsPayload(scope));
+    }
     if (p === "/api/reload" && req.method === "POST") { loadModel(true); return send(res, 200, { ok: true, version: cache.version }); }
 
     if (p === "/api/settings") {
@@ -511,19 +546,18 @@ async function handleApi(req, res, url) {
 
     if (p === "/api/file") {
       const rel = url.searchParams.get("p") || "";
-      const file = abs(rel);
-      if (!inside(APP_ROOT, file) && !inside(PROJECT_ROOT(), file)) return send(res, 403, { error: "outside project" });
-      if (!fs.existsSync(file)) return send(res, 404, { error: "not found", file: rel });
-      return sendFile(res, file, { download: url.searchParams.get("dl") === "1" });
+      const gate = servableFile(rel);
+      if (gate.status !== 200) return send(res, gate.status, { error: gate.error, ...(gate.file ? { file: gate.file } : {}) });
+      return sendFile(res, gate.file, { download: url.searchParams.get("dl") === "1" });
     }
 
     if (p === "/api/open" && req.method === "POST") {
       // Reveal a project file in Explorer / default app (local desktop convenience)
       const body = await readBody(req);
-      const file = abs(body.p || "");
-      if ((!inside(APP_ROOT, file) && !inside(PROJECT_ROOT(), file)) || !fs.existsSync(file)) return send(res, 404, { error: "not found" });
+      const gate = servableFile(body.p || "");
+      if (gate.status !== 200) return send(res, gate.status, { error: gate.error || "not found" });
       const { spawn } = await import("node:child_process");
-      spawn("cmd", ["/c", "start", "", file], { detached: true, stdio: "ignore", windowsHide: true }).unref();
+      spawn("cmd", ["/c", "start", "", gate.file], { detached: true, stdio: "ignore", windowsHide: true }).unref();
       return send(res, 200, { ok: true });
     }
 

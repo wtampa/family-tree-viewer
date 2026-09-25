@@ -27,7 +27,7 @@ async function postForm(url, form) {
 export const api = {
   version: () => get("/api/version"),
   tree: () => get("/api/tree"),
-  hints: () => get("/api/hints"),
+  hints: (scope = "ancestors") => get(`/api/hints?scope=${encodeURIComponent(scope)}`),
   setHintState: (id, state, note) => post("/api/hints-state", { id, state, note }),
   exportHints: (opts) => post("/api/hints-export", opts || {}),
   links: () => get("/api/links"),

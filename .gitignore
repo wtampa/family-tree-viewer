@@ -30,6 +30,8 @@ sample/**/*.gedcom
 !sample/simpsons/Simpsons.ged
 !sample/ducktales/DuckTales.ged
 !sample/harry-potter/HarryPotter.ged
+!sample/fixtures/
+!sample/fixtures/*.ged
 sample/**/media/
 sample/**/__pycache__/
 sample/**/_src/
