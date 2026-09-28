@@ -8,7 +8,7 @@ A local research desk for one genealogist. Import a [Gramps](https://gramps-proj
 
 Hints flag brick walls, missing vitals, uncited events, and possible duplicates. They do not invent a given name or a parent. Edits live in a SQLite copy on your machine. The original Gramps or GEDCOM file is never overwritten.
 
-Free (MIT). No account. No cloud copy of your tree. The server binds **`127.0.0.1` only**. Do not expose it to the internet, and do not put a real family file on GitHub.
+Free (MIT). No account. No cloud copy of your tree. The server binds **`127.0.0.1` only**.
 
 [New to GEDCOM?](docs/START.md) · [User guide](docs/USERGUIDE.md) · [15-minute tutorial](docs/TUTORIAL.md) · [Share a redacted pack](docs/FAMILY.md)
 
