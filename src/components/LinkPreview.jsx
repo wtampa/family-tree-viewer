@@ -17,7 +17,8 @@ export async function pdfThumb(url, width = 320) {
   if (thumbCache.has(url)) return thumbCache.get(url);
   const p = (async () => {
     const lib = await pdfjs();
-    const doc = await lib.getDocument({ url }).promise;
+    // Thumbnails only: never let embedded PDF JavaScript run (GHSA-hq66-cqwq-w95j class).
+    const doc = await lib.getDocument({ url, isEvalSupported: false }).promise;
     const page = await doc.getPage(1);
     const vp = page.getViewport({ scale: 1 });
     const scale = width / vp.width;

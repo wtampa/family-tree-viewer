@@ -801,7 +801,26 @@ function serveStatic(res, pathname) {
   send(res, 503, "<h1>Family Tree Viewer</h1><p>dist/ is missing. Run <code>npm install && npm run build</code> in this folder.</p>", MIME[".html"]);
 }
 
+// ---------- localhost-only guard ----------
+// The server binds 127.0.0.1, but a web page open in the same browser can still aim requests at it.
+// Host check: defeats DNS rebinding (a public hostname resolving to 127.0.0.1).
+// Origin check: cross-site pages always send their own Origin on POST; the app and curl/scripts do not trip it.
+const LOCAL_HOSTS = new Set([`127.0.0.1:${PORT}`, `localhost:${PORT}`, `[::1]:${PORT}`]);
+const LOCAL_ORIGINS = new Set([...LOCAL_HOSTS].map((h) => `http://${h}`));
+const WRITE_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
+function localOnly(req, res) {
+  const host = String(req.headers.host || "").toLowerCase();
+  if (!LOCAL_HOSTS.has(host)) { send(res, 421, { error: "Family Tree Viewer answers only on 127.0.0.1" }); return false; }
+  if (WRITE_METHODS.has(req.method || "")) {
+    // Absent Origin = same-origin navigation, curl, or a script: allowed. "null" = sandboxed/file: page: blocked.
+    const origin = String(req.headers.origin || "").toLowerCase();
+    if (origin && !LOCAL_ORIGINS.has(origin)) { send(res, 403, { error: "cross-site request blocked" }); return false; }
+  }
+  return true;
+}
+
 const server = http.createServer((req, res) => {
+  if (!localOnly(req, res)) return;
   let url;
   try { url = new URL(req.url || "/", `http://${HOST}:${PORT}`); } catch { return send(res, 400, { error: "bad url" }); }
   if (url.pathname.startsWith("/api/")) return handleApi(req, res, url);
