@@ -29,7 +29,7 @@
     "three": "^0.185.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.3.4",
+    "@vitejs/plugin-react": "^6.1.2",
     "vite": "^6.0.11"
   },
   "allowScripts": {
